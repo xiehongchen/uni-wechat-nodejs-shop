@@ -1,0 +1,11 @@
+{
+  "onReachBottomDistance": 150,
+  "navigationBarTitleText": "",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "my-search": "/components/my-search/my-search",
+    "uni-icons": "/node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons",
+    "my-goods": "/components/my-goods/my-goods",
+    "u-modal": "/uni_modules/uview-ui/components/u-modal/u-modal"
+  }
+}

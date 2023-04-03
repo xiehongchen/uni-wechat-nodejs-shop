@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "设置",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "u-icon": "/uni_modules/uview-ui/components/u-icon/u-icon",
+    "tools": "/components/my-user-tools/my-user-tools"
+  }
+}

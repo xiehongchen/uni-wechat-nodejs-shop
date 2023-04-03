@@ -1,0 +1,8 @@
+{
+  "component": true,
+  "usingComponents": {
+    "uni-icons": "/node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons",
+    "calendar": "/node-modules/@dcloudio/uni-ui/lib/uni-datetime-picker/calendar",
+    "time-picker": "/node-modules/@dcloudio/uni-ui/lib/uni-datetime-picker/time-picker"
+  }
+}
