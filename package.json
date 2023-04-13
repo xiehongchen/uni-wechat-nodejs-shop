@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@dcloudio/uni-ui": "^1.4.26",
-    "@escook/request-miniprogram": "^0.2.1"
+    "@escook/request-miniprogram": "^0.2.1",
+    "alipay-sdk": "^3.3.0"
   }
 }

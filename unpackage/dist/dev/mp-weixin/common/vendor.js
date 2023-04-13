@@ -9455,9 +9455,9 @@ internalMixin(Vue);
 
 /***/ }),
 /* 26 */
-/*!*********************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/pages.json ***!
-  \*********************************************************************************************************/
+/*!***************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/pages.json ***!
+  \***************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -9601,9 +9601,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 33 */
-/*!*************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/store/store.js ***!
-  \*************************************************************************************************************/
+/*!*******************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/store/store.js ***!
+  \*******************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9632,11 +9632,11 @@ _vue.default.use(_vuex.default);
 var store = new _vuex.default.Store({
   // TODO：挂载 store 模块
   modules: {
-    // 挂载购物车的 vuex 模块，模块内成员的访问路径被调整为 m_cart，例如：
-    // 购物车模块中 cart 数组的访问路径是 m_cart/cart
-    m_cart: _cart.default,
-    // 挂载用户的 vuex 模块，访问路径为 m_user
-    m_user: _user.default
+    // 挂载购物车的 vuex 模块，模块内成员的访问路径被调整为 cart，例如：
+    // 购物车模块中 cart 数组的访问路径是 cart/cart
+    cart: _cart.default,
+    // 挂载用户的 vuex 模块，访问路径为 user
+    user: _user.default
   }
 });
 
@@ -10902,9 +10902,9 @@ module.exports = index_cjs;
 
 /***/ }),
 /* 35 */
-/*!************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/store/cart.js ***!
-  \************************************************************************************************************/
+/*!******************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/store/cart.js ***!
+  \******************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10924,7 +10924,7 @@ var _default = {
       // 购物车的数组，用来存储购物车中每个商品的信息对象
       // 每个商品的信息对象，都包含如下 6 个属性：
       // { goods_id, goods_name, goods_price, goods_count, goods_small_logo, goods_state }
-      cart: JSON.parse(uni.getStorageSync('cart') || '[]')
+      cartList: JSON.parse(uni.getStorageSync('cart') || '[]')
     };
   },
   // 模块的 mutations 方法
@@ -10932,27 +10932,34 @@ var _default = {
     addToCart: function addToCart(state, goods) {
       // 根据提交的商品的Id，查询购物车中是否存在这件商品
       // 如果不存在，则 findResult 为 undefined；否则，为查找到的商品信息对象
-      var findResult = state.cart.find(function (x) {
+      var findResult = state.cartList.find(function (x) {
         return x.goods_id === goods.goods_id;
       });
+      // console.log("vuex---添加到本地的goods");
+      // console.log(goods);
       if (!findResult) {
         // 如果购物车中没有这件商品，则直接 push
-        state.cart.push(goods);
+        state.cartList.push(goods);
+        // console.log("vuex---购物车商品添加");
+        // console.log(state.cartList);
       } else {
         // 如果购物车中有这件商品，则只更新数量即可
         findResult.goods_count++;
-        // 通过 commit 方法，调用 m_cart 命名空间下的 saveToStorage 方法
-        this.commit('m_cart/saveToStorage');
+        // 通过 commit 方法，调用 cart 命名空间下的 saveToStorage 方法
       }
+
+      this.commit('cart/saveToStorage');
     },
     // 将购物车中的数据持久化存储到本地
     saveToStorage: function saveToStorage(state) {
-      uni.setStorageSync('cart', JSON.stringify(state.cart));
+      // console.log("vuex---添加购物车信息到本地");
+      uni.setStorageSync('cart', JSON.stringify(state.cartList));
+      // console.log(state.cartList);
     },
     // 更新购物车中商品的勾选状态
     updateGoodsState: function updateGoodsState(state, goods) {
       // 根据 goods_id 查询购物车中对应商品的信息对象
-      var findResult = state.cart.find(function (x) {
+      var findResult = state.cartList.find(function (x) {
         return x.goods_id === goods.goods_id;
       });
 
@@ -10961,39 +10968,40 @@ var _default = {
         // 更新对应商品的勾选状态
         findResult.goods_state = goods.goods_state;
         // 持久化存储到本地
-        this.commit('m_cart/saveToStorage');
+        this.commit('cart/saveToStorage');
       }
     },
     // 更新购物车中商品的数量
     updateGoodsCount: function updateGoodsCount(state, goods) {
       // 根据 goods_id 查询购物车中对应商品的信息对象
-      var findResult = state.cart.find(function (x) {
+      var findResult = state.cartList.find(function (x) {
         return x.goods_id === goods.goods_id;
       });
       if (findResult) {
         // 更新对应商品的数量
         findResult.goods_count = goods.goods_count;
         // 持久化存储到本地
-        this.commit('m_cart/saveToStorage');
+        this.commit('cart/saveToStorage');
+        // console.log("vuex---数据更新到本地");
       }
     },
     // 根据 Id 从购物车中删除对应的商品信息
     removeGoodsById: function removeGoodsById(state, goods_id) {
       // 调用数组的 filter 方法进行过滤
-      state.cart = state.cart.filter(function (x) {
+      state.cartList = state.cartList.filter(function (x) {
         return x.goods_id !== goods_id;
       });
       // 持久化存储到本地
-      this.commit('m_cart/saveToStorage');
+      this.commit('cart/saveToStorage');
     },
     // 更新所有商品的勾选状态
     updateAllGoodsState: function updateAllGoodsState(state, newState) {
       // 循环更新购物车中每件商品的勾选状态
-      state.cart.forEach(function (x) {
+      state.cartList.forEach(function (x) {
         return x.goods_state = newState;
       });
       // 持久化存储到本地
-      this.commit('m_cart/saveToStorage');
+      this.commit('cart/saveToStorage');
     }
   },
   // 模块的 getters 属性
@@ -11002,7 +11010,7 @@ var _default = {
     total: function total(state) {
       var c = 0;
       // 循环统计商品的数量，累加到变量 c 中
-      state.cart.forEach(function (goods) {
+      state.cartList.forEach(function (goods) {
         return c += goods.goods_count;
       });
       return c;
@@ -11012,7 +11020,7 @@ var _default = {
       // 先使用 filter 方法，从购物车中过滤器已勾选的商品
       // 再使用 reduce 方法，将已勾选的商品总数量进行累加
       // reduce() 的返回值就是已勾选的商品的总数量
-      return state.cart.filter(function (x) {
+      return state.cartList.filter(function (x) {
         return x.goods_state;
       }).reduce(function (total, item) {
         return total += item.goods_count;
@@ -11024,7 +11032,7 @@ var _default = {
       // 再使用 reduce 方法，将已勾选的商品数量 * 单价之后，进行累加
       // reduce() 的返回值就是已勾选的商品的总价
       // 最后调用 toFixed(2) 方法，保留两位小数
-      return state.cart.filter(function (x) {
+      return state.cartList.filter(function (x) {
         return x.goods_state;
       }).reduce(function (total, item) {
         return total += item.goods_count * item.goods_price;
@@ -11037,9 +11045,9 @@ exports.default = _default;
 
 /***/ }),
 /* 36 */
-/*!************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/store/user.js ***!
-  \************************************************************************************************************/
+/*!******************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/store/user.js ***!
+  \******************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11061,7 +11069,7 @@ var _default = {
       // 登录成功之后的 token 字符串
       token: uni.getStorageSync('token') || '',
       // 用户的基本信息
-      userInfo: JSON.parse(uni.getStorageSync('userinfo') || '{}'),
+      userinfo: JSON.parse(uni.getStorageSync('userinfo') || '{}'),
       // 重定向的 object 对象 { openType, from }
       redirectInfo: null
     };
@@ -11071,38 +11079,46 @@ var _default = {
     // 更新收货地址
     updateAddress: function updateAddress(state, address) {
       state.address = address;
-      // 2. 通过 this.commit() 方法，调用 m_user 模块下的 saveAddressToStorage 方法将 address 对象持久化存储到本地
-      this.commit('m_user/saveAddressToStorage');
+      // 2. 通过 this.commit() 方法，调用 user 模块下的 saveAddressToStorage 方法将 address 对象持久化存储到本地
+      this.commit('user/saveAddressToStorage');
     },
-    // 1. 定义将 address 持久化存储到本地 mutations 方法
+    // 定义将 address 持久化存储到本地 mutations 方法
     saveAddressToStorage: function saveAddressToStorage(state) {
       uni.setStorageSync('address', JSON.stringify(state.address));
     },
     // 更新用户的基本信息
     updateUserInfo: function updateUserInfo(state, userinfo) {
       state.userinfo = userinfo;
-      // 通过 this.commit() 方法，调用 m_user 模块下的 saveUserInfoToStorage 方法，将 userinfo 对象持久化存储到本地
-      this.commit('m_user/saveUserInfoToStorage');
-      console.log("用户信息更新完毕");
+      // 通过 this.commit() 方法，调用 user 模块下的 saveUserInfoToStorage 方法，将 userinfo 对象持久化存储到本地
+      this.commit('user/saveUserInfoToStorage');
+      // console.log("vuex---用户信息更新完毕");
+      // console.log(state.userinfo);
     },
     // 将 userinfo 持久化存储到本地
     saveUserInfoToStorage: function saveUserInfoToStorage(state) {
       uni.setStorageSync('userinfo', JSON.stringify(state.userinfo));
-      console.log("将用户信息存储到本地");
+      // console.log("vuex---将用户信息存储到本地");
     },
     // 更新 token 字符串
     updateToken: function updateToken(state, token) {
       state.token = token;
-      // 通过 this.commit() 方法，调用 m_user 模块下的 saveTokenToStorage 方法，将 token 字符串持久化存储到本地
-      this.commit('m_user/saveTokenToStorage');
+      // 通过 this.commit() 方法，调用 user 模块下的 saveTokenToStorage 方法，将 token 字符串持久化存储到本地
+      this.commit('user/saveTokenToStorage');
+      // console.log("vuex---用户token更新完毕");
+      // console.log(state.token);
     },
     // 将 token 字符串持久化存储到本地
     saveTokenToStorage: function saveTokenToStorage(state) {
       uni.setStorageSync('token', state.token);
+      // console.log("vuex---将用户token存储到本地");
     },
-    // 删除userinfo
+    // 删除userinfo用户信息
     removeUserInfoStorage: function removeUserInfoStorage(state) {
       uni.removeStorageSync('userinfo');
+      uni.removeStorageSync('token');
+      uni.removeStorageSync('address');
+      uni.removeStorageSync('kw');
+      uni.removeStorageSync('cart');
     },
     // 更新重定向的信息对象
     updateRedirectInfo: function updateRedirectInfo(state, info) {
@@ -11125,9 +11141,9 @@ exports.default = _default;
 
 /***/ }),
 /* 37 */
-/*!****************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/index.js ***!
-  \****************************************************************************************************************************/
+/*!**********************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/index.js ***!
+  \**********************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11214,9 +11230,9 @@ exports.default = _default;
 
 /***/ }),
 /* 38 */
-/*!***************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/mixin/mixin.js ***!
-  \***************************************************************************************************************************************/
+/*!*********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/mixin/mixin.js ***!
+  \*********************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11382,9 +11398,9 @@ exports.default = _default;
 
 /***/ }),
 /* 39 */
-/*!*****************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/mixin/mpMixin.js ***!
-  \*****************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/mixin/mpMixin.js ***!
+  \***********************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11405,9 +11421,9 @@ exports.default = _default;
 
 /***/ }),
 /* 40 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/index.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/index.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11425,9 +11441,9 @@ exports.default = _default;
 
 /***/ }),
 /* 41 */
-/*!*****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/core/Request.js ***!
-  \*****************************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/core/Request.js ***!
+  \***********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11631,9 +11647,9 @@ exports.default = Request;
 
 /***/ }),
 /* 42 */
-/*!*************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/core/dispatchRequest.js ***!
-  \*************************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/core/dispatchRequest.js ***!
+  \*******************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11653,9 +11669,9 @@ exports.default = _default;
 
 /***/ }),
 /* 43 */
-/*!*******************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/adapters/index.js ***!
-  \*******************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/adapters/index.js ***!
+  \*************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11734,9 +11750,9 @@ exports.default = _default;
 
 /***/ }),
 /* 44 */
-/*!*********************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/helpers/buildURL.js ***!
-  \*********************************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/helpers/buildURL.js ***!
+  \***************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11804,9 +11820,9 @@ function buildURL(url, params) {
 
 /***/ }),
 /* 45 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/utils.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/utils.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11957,9 +11973,9 @@ function isUndefined(val) {
 
 /***/ }),
 /* 46 */
-/*!***********************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/core/buildFullPath.js ***!
-  \***********************************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/core/buildFullPath.js ***!
+  \*****************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11991,9 +12007,9 @@ function buildFullPath(baseURL, requestedURL) {
 
 /***/ }),
 /* 47 */
-/*!**************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/helpers/isAbsoluteURL.js ***!
-  \**************************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/helpers/isAbsoluteURL.js ***!
+  \********************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12019,9 +12035,9 @@ function isAbsoluteURL(url) {
 
 /***/ }),
 /* 48 */
-/*!************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/helpers/combineURLs.js ***!
-  \************************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/helpers/combineURLs.js ***!
+  \******************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12045,9 +12061,9 @@ function combineURLs(baseURL, relativeURL) {
 
 /***/ }),
 /* 49 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/core/settle.js ***!
-  \****************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/core/settle.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12077,9 +12093,9 @@ function settle(resolve, reject, response) {
 
 /***/ }),
 /* 50 */
-/*!****************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/core/InterceptorManager.js ***!
-  \****************************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/core/InterceptorManager.js ***!
+  \**********************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12141,9 +12157,9 @@ exports.default = _default;
 
 /***/ }),
 /* 51 */
-/*!*********************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/core/mergeConfig.js ***!
-  \*********************************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/core/mergeConfig.js ***!
+  \***************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12217,9 +12233,9 @@ exports.default = _default;
 
 /***/ }),
 /* 52 */
-/*!******************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/core/defaults.js ***!
-  \******************************************************************************************************************************************************/
+/*!************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/core/defaults.js ***!
+  \************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12249,9 +12265,9 @@ exports.default = _default;
 
 /***/ }),
 /* 53 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/luch-request/utils/clone.js ***!
-  \****************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/luch-request/utils/clone.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -14573,9 +14589,9 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 /* 58 */
-/*!**************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/util/route.js ***!
-  \**************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/util/route.js ***!
+  \********************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15135,9 +15151,9 @@ module.exports = _asyncToGenerator, module.exports.__esModule = true, module.exp
 
 /***/ }),
 /* 62 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/function/colorGradient.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/function/colorGradient.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15290,9 +15306,9 @@ exports.default = _default;
 
 /***/ }),
 /* 63 */
-/*!*****************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/function/test.js ***!
-  \*****************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/function/test.js ***!
+  \***********************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15595,9 +15611,9 @@ exports.default = _default;
 
 /***/ }),
 /* 64 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/function/debounce.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/function/debounce.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15642,9 +15658,9 @@ exports.default = _default;
 
 /***/ }),
 /* 65 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/function/throttle.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/function/throttle.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15691,9 +15707,9 @@ exports.default = _default;
 
 /***/ }),
 /* 66 */
-/*!******************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/function/index.js ***!
-  \******************************************************************************************************************************************/
+/*!************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/function/index.js ***!
+  \************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16492,9 +16508,9 @@ exports.default = _default;
 
 /***/ }),
 /* 67 */
-/*!******************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/function/digit.js ***!
-  \******************************************************************************************************************************************/
+/*!************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/function/digit.js ***!
+  \************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16711,9 +16727,9 @@ module.exports = _toArray, module.exports.__esModule = true, module.exports["def
 
 /***/ }),
 /* 69 */
-/*!*****************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/config.js ***!
-  \*****************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/config.js ***!
+  \***********************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16755,9 +16771,9 @@ exports.default = _default;
 
 /***/ }),
 /* 70 */
-/*!****************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props.js ***!
-  \****************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props.js ***!
+  \**********************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16867,9 +16883,9 @@ exports.default = _default;
 
 /***/ }),
 /* 71 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/actionSheet.js ***!
-  \****************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/actionSheet.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16911,9 +16927,9 @@ exports.default = _default;
 
 /***/ }),
 /* 72 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/album.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/album.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16955,9 +16971,9 @@ exports.default = _default;
 
 /***/ }),
 /* 73 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/alert.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/alert.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -16994,9 +17010,9 @@ exports.default = _default;
 
 /***/ }),
 /* 74 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/avatar.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/avatar.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17039,9 +17055,9 @@ exports.default = _default;
 
 /***/ }),
 /* 75 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/avatarGroup.js ***!
-  \****************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/avatarGroup.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17081,9 +17097,9 @@ exports.default = _default;
 
 /***/ }),
 /* 76 */
-/*!************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/backtop.js ***!
-  \************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/backtop.js ***!
+  \******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17127,9 +17143,9 @@ exports.default = _default;
 
 /***/ }),
 /* 77 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/badge.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/badge.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17173,9 +17189,9 @@ exports.default = _default;
 
 /***/ }),
 /* 78 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/button.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/button.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17232,9 +17248,9 @@ exports.default = _default;
 
 /***/ }),
 /* 79 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/calendar.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/calendar.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17295,9 +17311,9 @@ exports.default = _default;
 
 /***/ }),
 /* 80 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/carKeyboard.js ***!
-  \****************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/carKeyboard.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17327,9 +17343,9 @@ exports.default = _default;
 
 /***/ }),
 /* 81 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/cell.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/cell.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17379,9 +17395,9 @@ exports.default = _default;
 
 /***/ }),
 /* 82 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/cellGroup.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/cellGroup.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17413,9 +17429,9 @@ exports.default = _default;
 
 /***/ }),
 /* 83 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/checkbox.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/checkbox.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17457,9 +17473,9 @@ exports.default = _default;
 
 /***/ }),
 /* 84 */
-/*!******************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/checkboxGroup.js ***!
-  \******************************************************************************************************************************************************/
+/*!************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/checkboxGroup.js ***!
+  \************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17505,9 +17521,9 @@ exports.default = _default;
 
 /***/ }),
 /* 85 */
-/*!*******************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/circleProgress.js ***!
-  \*******************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/circleProgress.js ***!
+  \*************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17537,9 +17553,9 @@ exports.default = _default;
 
 /***/ }),
 /* 86 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/code.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/code.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17574,9 +17590,9 @@ exports.default = _default;
 
 /***/ }),
 /* 87 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/codeInput.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/codeInput.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17620,9 +17636,9 @@ exports.default = _default;
 
 /***/ }),
 /* 88 */
-/*!********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/col.js ***!
-  \********************************************************************************************************************************************/
+/*!**************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/col.js ***!
+  \**************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17656,9 +17672,9 @@ exports.default = _default;
 
 /***/ }),
 /* 89 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/collapse.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/collapse.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17690,9 +17706,9 @@ exports.default = _default;
 
 /***/ }),
 /* 90 */
-/*!*****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/collapseItem.js ***!
-  \*****************************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/collapseItem.js ***!
+  \***********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17732,9 +17748,9 @@ exports.default = _default;
 
 /***/ }),
 /* 91 */
-/*!*****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/columnNotice.js ***!
-  \*****************************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/columnNotice.js ***!
+  \***********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17773,9 +17789,9 @@ exports.default = _default;
 
 /***/ }),
 /* 92 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/countDown.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/countDown.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17808,9 +17824,9 @@ exports.default = _default;
 
 /***/ }),
 /* 93 */
-/*!************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/countTo.js ***!
-  \************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/countTo.js ***!
+  \******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17850,9 +17866,9 @@ exports.default = _default;
 
 /***/ }),
 /* 94 */
-/*!*******************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/datetimePicker.js ***!
-  \*******************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/datetimePicker.js ***!
+  \*************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17905,9 +17921,9 @@ exports.default = _default;
 
 /***/ }),
 /* 95 */
-/*!************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/divider.js ***!
-  \************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/divider.js ***!
+  \******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17944,9 +17960,9 @@ exports.default = _default;
 
 /***/ }),
 /* 96 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/empty.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/empty.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -17986,9 +18002,9 @@ exports.default = _default;
 
 /***/ }),
 /* 97 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/form.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/form.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18031,9 +18047,9 @@ exports.default = _default;
 
 /***/ }),
 /* 98 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/formItem.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/formItem.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18071,9 +18087,9 @@ exports.default = _default;
 
 /***/ }),
 /* 99 */
-/*!********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/gap.js ***!
-  \********************************************************************************************************************************************/
+/*!**************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/gap.js ***!
+  \**************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18107,9 +18123,9 @@ exports.default = _default;
 
 /***/ }),
 /* 100 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/grid.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/grid.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18141,9 +18157,9 @@ exports.default = _default;
 
 /***/ }),
 /* 101 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/gridItem.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/gridItem.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18174,9 +18190,9 @@ exports.default = _default;
 
 /***/ }),
 /* 102 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/icon.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/icon.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18226,9 +18242,9 @@ exports.default = _default;
 
 /***/ }),
 /* 103 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/image.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/image.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18273,9 +18289,9 @@ exports.default = _default;
 
 /***/ }),
 /* 104 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/indexAnchor.js ***!
-  \****************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/indexAnchor.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18309,9 +18325,9 @@ exports.default = _default;
 
 /***/ }),
 /* 105 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/indexList.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/indexList.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18347,9 +18363,9 @@ exports.default = _default;
 
 /***/ }),
 /* 106 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/input.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/input.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18412,9 +18428,9 @@ exports.default = _default;
 
 /***/ }),
 /* 107 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/keyboard.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/keyboard.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18459,9 +18475,9 @@ exports.default = _default;
 
 /***/ }),
 /* 108 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/line.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/line.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18496,9 +18512,9 @@ exports.default = _default;
 
 /***/ }),
 /* 109 */
-/*!*****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/lineProgress.js ***!
-  \*****************************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/lineProgress.js ***!
+  \***********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18532,9 +18548,9 @@ exports.default = _default;
 
 /***/ }),
 /* 110 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/link.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/link.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18574,9 +18590,9 @@ exports.default = _default;
 
 /***/ }),
 /* 111 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/list.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/list.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18619,9 +18635,9 @@ exports.default = _default;
 
 /***/ }),
 /* 112 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/listItem.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/listItem.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18651,9 +18667,9 @@ exports.default = _default;
 
 /***/ }),
 /* 113 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/loadingIcon.js ***!
-  \****************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/loadingIcon.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18697,9 +18713,9 @@ exports.default = _default;
 
 /***/ }),
 /* 114 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/loadingPage.js ***!
-  \****************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/loadingPage.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18737,9 +18753,9 @@ exports.default = _default;
 
 /***/ }),
 /* 115 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/loadmore.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/loadmore.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18786,9 +18802,9 @@ exports.default = _default;
 
 /***/ }),
 /* 116 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/modal.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/modal.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18833,9 +18849,9 @@ exports.default = _default;
 
 /***/ }),
 /* 117 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/navbar.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/navbar.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18882,9 +18898,9 @@ exports.default = _default;
 
 /***/ }),
 /* 118 */
-/*!****************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/color.js ***!
-  \****************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/color.js ***!
+  \**********************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18915,9 +18931,9 @@ exports.default = _default;
 
 /***/ }),
 /* 119 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/noNetwork.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/noNetwork.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18949,9 +18965,9 @@ exports.default = _default;
 
 /***/ }),
 /* 120 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/noticeBar.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/noticeBar.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -18995,9 +19011,9 @@ exports.default = _default;
 
 /***/ }),
 /* 121 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/notify.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/notify.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19034,9 +19050,9 @@ exports.default = _default;
 
 /***/ }),
 /* 122 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/numberBox.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/numberBox.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19086,9 +19102,9 @@ exports.default = _default;
 
 /***/ }),
 /* 123 */
-/*!*******************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/numberKeyboard.js ***!
-  \*******************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/numberKeyboard.js ***!
+  \*************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19120,9 +19136,9 @@ exports.default = _default;
 
 /***/ }),
 /* 124 */
-/*!************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/overlay.js ***!
-  \************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/overlay.js ***!
+  \******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19155,9 +19171,9 @@ exports.default = _default;
 
 /***/ }),
 /* 125 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/parse.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/parse.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19194,9 +19210,9 @@ exports.default = _default;
 
 /***/ }),
 /* 126 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/picker.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/picker.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19244,9 +19260,9 @@ exports.default = _default;
 
 /***/ }),
 /* 127 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/popup.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/popup.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19290,9 +19306,9 @@ exports.default = _default;
 
 /***/ }),
 /* 128 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/radio.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/radio.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19334,9 +19350,9 @@ exports.default = _default;
 
 /***/ }),
 /* 129 */
-/*!***************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/radioGroup.js ***!
-  \***************************************************************************************************************************************************/
+/*!*********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/radioGroup.js ***!
+  \*********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19381,9 +19397,9 @@ exports.default = _default;
 
 /***/ }),
 /* 130 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/rate.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/rate.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19424,9 +19440,9 @@ exports.default = _default;
 
 /***/ }),
 /* 131 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/readMore.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/readMore.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19463,9 +19479,9 @@ exports.default = _default;
 
 /***/ }),
 /* 132 */
-/*!********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/row.js ***!
-  \********************************************************************************************************************************************/
+/*!**************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/row.js ***!
+  \**************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19497,9 +19513,9 @@ exports.default = _default;
 
 /***/ }),
 /* 133 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/rowNotice.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/rowNotice.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19535,9 +19551,9 @@ exports.default = _default;
 
 /***/ }),
 /* 134 */
-/*!***************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/scrollList.js ***!
-  \***************************************************************************************************************************************************/
+/*!*********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/scrollList.js ***!
+  \*********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19572,9 +19588,9 @@ exports.default = _default;
 
 /***/ }),
 /* 135 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/search.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/search.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19630,9 +19646,9 @@ exports.default = _default;
 
 /***/ }),
 /* 136 */
-/*!************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/section.js ***!
-  \************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/section.js ***!
+  \******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19671,9 +19687,9 @@ exports.default = _default;
 
 /***/ }),
 /* 137 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/skeleton.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/skeleton.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19713,9 +19729,9 @@ exports.default = _default;
 
 /***/ }),
 /* 138 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/slider.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/slider.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19755,9 +19771,9 @@ exports.default = _default;
 
 /***/ }),
 /* 139 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/statusBar.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/statusBar.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19787,9 +19803,9 @@ exports.default = _default;
 
 /***/ }),
 /* 140 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/steps.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/steps.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19825,9 +19841,9 @@ exports.default = _default;
 
 /***/ }),
 /* 141 */
-/*!**************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/stepsItem.js ***!
-  \**************************************************************************************************************************************************/
+/*!********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/stepsItem.js ***!
+  \********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19860,9 +19876,9 @@ exports.default = _default;
 
 /***/ }),
 /* 142 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/sticky.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/sticky.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19897,9 +19913,9 @@ exports.default = _default;
 
 /***/ }),
 /* 143 */
-/*!***************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/subsection.js ***!
-  \***************************************************************************************************************************************************/
+/*!*********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/subsection.js ***!
+  \*********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19937,9 +19953,9 @@ exports.default = _default;
 
 /***/ }),
 /* 144 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/swipeAction.js ***!
-  \****************************************************************************************************************************************************/
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/swipeAction.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -19969,9 +19985,9 @@ exports.default = _default;
 
 /***/ }),
 /* 145 */
-/*!********************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/swipeActionItem.js ***!
-  \********************************************************************************************************************************************************/
+/*!**************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/swipeActionItem.js ***!
+  \**************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20007,9 +20023,9 @@ exports.default = _default;
 
 /***/ }),
 /* 146 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/swiper.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/swiper.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20064,9 +20080,9 @@ exports.default = _default;
 
 /***/ }),
 /* 147 */
-/*!*********************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/swipterIndicator.js ***!
-  \*********************************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/swipterIndicator.js ***!
+  \***************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20100,9 +20116,9 @@ exports.default = _default;
 
 /***/ }),
 /* 148 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/switch.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/switch.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20141,9 +20157,9 @@ exports.default = _default;
 
 /***/ }),
 /* 149 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/tabbar.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/tabbar.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20180,9 +20196,9 @@ exports.default = _default;
 
 /***/ }),
 /* 150 */
-/*!***************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/tabbarItem.js ***!
-  \***************************************************************************************************************************************************/
+/*!*********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/tabbarItem.js ***!
+  \*********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20217,9 +20233,9 @@ exports.default = _default;
 
 /***/ }),
 /* 151 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/tabs.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/tabs.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20274,9 +20290,9 @@ exports.default = _default;
 
 /***/ }),
 /* 152 */
-/*!********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/tag.js ***!
-  \********************************************************************************************************************************************/
+/*!**************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/tag.js ***!
+  \**************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20320,9 +20336,9 @@ exports.default = _default;
 
 /***/ }),
 /* 153 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/text.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/text.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20376,9 +20392,9 @@ exports.default = _default;
 
 /***/ }),
 /* 154 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/textarea.js ***!
-  \*************************************************************************************************************************************************/
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/textarea.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20429,9 +20445,9 @@ exports.default = _default;
 
 /***/ }),
 /* 155 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/toast.js ***!
-  \**********************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/toast.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20475,9 +20491,9 @@ exports.default = _default;
 
 /***/ }),
 /* 156 */
-/*!************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/toolbar.js ***!
-  \************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/toolbar.js ***!
+  \******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20512,9 +20528,9 @@ exports.default = _default;
 
 /***/ }),
 /* 157 */
-/*!************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/tooltip.js ***!
-  \************************************************************************************************************************************************/
+/*!******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/tooltip.js ***!
+  \******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20556,9 +20572,9 @@ exports.default = _default;
 
 /***/ }),
 /* 158 */
-/*!***************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/transition.js ***!
-  \***************************************************************************************************************************************************/
+/*!*********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/transition.js ***!
+  \*********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20591,9 +20607,9 @@ exports.default = _default;
 
 /***/ }),
 /* 159 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/props/upload.js ***!
-  \***********************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/props/upload.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20650,9 +20666,9 @@ exports.default = _default;
 
 /***/ }),
 /* 160 */
-/*!*****************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/config/zIndex.js ***!
-  \*****************************************************************************************************************************************/
+/*!***********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/config/zIndex.js ***!
+  \***********************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20686,9 +20702,9 @@ exports.default = _default;
 
 /***/ }),
 /* 161 */
-/*!*********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/libs/function/platform.js ***!
-  \*********************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/function/platform.js ***!
+  \***************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20722,9 +20738,31 @@ exports.default = _default;
 /* 166 */,
 /* 167 */,
 /* 168 */
-/*!**********************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/api/home.js ***!
-  \**********************************************************************************************************/
+/*!*********************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/config/config.js ***!
+  \*********************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.baseUrl = void 0;
+// 设置 baseUrl		内网穿透
+// export const baseUrl = 'http://6df730d4.r8.vip.cpolar.cn';
+
+// 本地
+var baseUrl = 'http://localhost:3000';
+exports.baseUrl = baseUrl;
+
+/***/ }),
+/* 169 */
+/*!****************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/api/home.js ***!
+  \****************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20739,7 +20777,7 @@ exports.getFloorList = getFloorList;
 exports.getFloorTitle = getFloorTitle;
 exports.getNavList = getNavList;
 exports.getSwiperList = getSwiperList;
-var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 169));
+var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 170));
 // 获取主页轮播图
 function getSwiperList() {
   return _request.default.request({
@@ -20769,10 +20807,10 @@ function getFloorList() {
 }
 
 /***/ }),
-/* 169 */
-/*!****************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/config/request.js ***!
-  \****************************************************************************************************************/
+/* 170 */
+/*!**********************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/config/request.js ***!
+  \**********************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20785,12 +20823,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _store = _interopRequireDefault(__webpack_require__(/*! @/store/store.js */ 33));
+var _config = __webpack_require__(/*! ./config.js */ 168);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-// import store from '@/store/index.js'
 var _default = {
   common: {
-    baseUrl: "http://localhost:3000/api",
+    url: "http://localhost:3000/api",
+    // url:  baseUrl + "/api",
     data: {},
     header: (0, _defineProperty2.default)({
       "Content-Type": "application/json"
@@ -20803,31 +20843,44 @@ var _default = {
     uni.showLoading({
       title: '加载中'
     });
-    options.url = this.common.baseUrl + options.url;
+    options.url = this.common.url + options.url;
     options.data = options.data || this.common.data;
     options.header = options.header || this.common.header;
     options.method = options.method || this.common.method;
     options.dataType = options.dataType || this.common.dataType;
 
-    //判断是否传入了header头的token进行用户是否登录的验证
-    // if(options.header.token){
-    // 	options.header.token = store.state.user.token;
-    // 	if(!options.header.token){
-    // 		uni.showToast({
-    // 			title:"请先登录",
-    // 			icon:"none"
-    // 		})
-    // 		return uni.navigateTo({
-    // 			url:"/pages/login/login"
-    // 		})
-    // 	}
-    // }
+    // console.log(options.url);
+    // console.log(store.state.user.token);
+    // 判断是否传入了header头的token进行用户是否登录的验证
+    if (options.header.token) {
+      var token = _store.default.state.user.token;
+      // console.log("request---token");
+      // console.log(token);
+      if (!token) {
+        uni.showToast({
+          title: "请先登录",
+          icon: "none"
+        });
+        return uni.navigateTo({
+          url: "/pages/login/login"
+        });
+      } else {
+        options.header.Authorization = "Bearer ".concat(token);
+      }
+    }
+    // console.log("options数据");
+    // console.log(options.url);
+    // console.log(options.data);
+    // console.log(options.header);
+    // console.log(options.method);
+    // console.log(options.dataType);
     // 返回一个promise
     return new Promise(function (res, rej) {
       uni.request(_objectSpread(_objectSpread({}, options), {}, {
         success: function success(result) {
-          console.log("result的结果");
-          console.log(result);
+          console.log("成功*******************");
+          // console.log("result的结果");
+          // console.log(result);
           if (result.statusCode != 200) {
             uni.hideLoading();
             return rej();
@@ -20837,6 +20890,10 @@ var _default = {
             uni.hideLoading();
           }, 200);
           res(data);
+        },
+        fail: function fail(err) {
+          console.log("错误*******************");
+          uni.hideLoading();
         }
       }));
     });
@@ -20846,7 +20903,6 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 170 */,
 /* 171 */,
 /* 172 */,
 /* 173 */,
@@ -20854,10 +20910,11 @@ exports.default = _default;
 /* 175 */,
 /* 176 */,
 /* 177 */,
-/* 178 */
-/*!**********************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/api/cate.js ***!
-  \**********************************************************************************************************/
+/* 178 */,
+/* 179 */
+/*!****************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/api/cate.js ***!
+  \****************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20869,7 +20926,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.getCateList = getCateList;
-var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 169));
+var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 170));
 // 获取分类数据
 function getCateList() {
   return _request.default.request({
@@ -20878,7 +20935,6 @@ function getCateList() {
 }
 
 /***/ }),
-/* 179 */,
 /* 180 */,
 /* 181 */,
 /* 182 */,
@@ -20886,10 +20942,11 @@ function getCateList() {
 /* 184 */,
 /* 185 */,
 /* 186 */,
-/* 187 */
-/*!*********************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/mixins/tabbar-badge.js ***!
-  \*********************************************************************************************************************/
+/* 187 */,
+/* 188 */
+/*!***************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/mixins/tabbar-badge.js ***!
+  \***************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20907,7 +20964,7 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 // 导出一个 mixin 对象
 var _default = {
-  computed: _objectSpread({}, (0, _vuex.mapGetters)('m_cart', ['total'])),
+  computed: _objectSpread({}, (0, _vuex.mapGetters)('cart', ['total'])),
   watch: {
     // 监听 total 值的变化
     total: function total() {
@@ -20933,18 +20990,10 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 188 */,
-/* 189 */,
-/* 190 */,
-/* 191 */,
-/* 192 */,
-/* 193 */,
-/* 194 */,
-/* 195 */,
-/* 196 */
-/*!**********************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/api/user.js ***!
-  \**********************************************************************************************************/
+/* 189 */
+/*!****************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/api/cart.js ***!
+  \****************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20955,8 +21004,81 @@ var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/inte
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.deleteCartList = deleteCartList;
+exports.setCartList = setCartList;
+exports.setCartNum = setCartNum;
+var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 170));
+// 提交购物车数据
+function setCartList(goods_id) {
+  return _request.default.request({
+    url: "/cart/add",
+    method: 'post',
+    header: {
+      token: true
+    },
+    data: {
+      goods_id: goods_id
+    }
+  });
+}
+
+// 提交购物车数据
+function setCartNum(goods) {
+  return _request.default.request({
+    url: "/cart/edit",
+    method: 'put',
+    header: {
+      token: true
+    },
+    data: {
+      goods: goods
+    }
+  });
+}
+function deleteCartList(goods_id) {
+  return _request.default.request({
+    url: "/cart/delete",
+    method: 'post',
+    header: {
+      token: true
+    },
+    data: {
+      goods_id: goods_id
+    }
+  });
+}
+
+/***/ }),
+/* 190 */,
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */
+/*!****************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/api/user.js ***!
+  \****************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.removeInfo = removeInfo;
+exports.setInfo = setInfo;
 exports.userLogin = userLogin;
-var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 169));
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 170));
+var _user = _interopRequireDefault(__webpack_require__(/*! ../store/user */ 36));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 // 登录
 function userLogin(code) {
   return _request.default.request({
@@ -20968,19 +21090,44 @@ function userLogin(code) {
   });
 }
 
+// 更新用户信息
+function setInfo(userInfo) {
+  // console.log("传给后台的数据");
+  // console.log(userInfo);
+  return _request.default.request({
+    url: '/user/info',
+    method: "put",
+    header: {
+      token: true
+    },
+    data: _objectSpread({}, userInfo)
+  });
+}
+
+// 删除用户信息
+function removeInfo() {
+  return _request.default.request({
+    url: '/user/delete',
+    method: "delete",
+    header: {
+      token: true
+    }
+  });
+}
+
 /***/ }),
-/* 197 */,
-/* 198 */,
 /* 199 */,
 /* 200 */,
 /* 201 */,
 /* 202 */,
 /* 203 */,
 /* 204 */,
-/* 205 */
-/*!***********************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/api/goods.js ***!
-  \***********************************************************************************************************/
+/* 205 */,
+/* 206 */,
+/* 207 */
+/*!*****************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/api/goods.js ***!
+  \*****************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20993,7 +21140,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getGoodsDetail = getGoodsDetail;
 exports.getGoodsList = getGoodsList;
-var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 169));
+var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 170));
 // 获取商品列表
 function getGoodsList(data) {
   return _request.default.request({
@@ -21013,8 +21160,6 @@ function getGoodsDetail(goods_id) {
 }
 
 /***/ }),
-/* 206 */,
-/* 207 */,
 /* 208 */,
 /* 209 */,
 /* 210 */,
@@ -21055,14 +21200,217 @@ function getGoodsDetail(goods_id) {
 /* 245 */,
 /* 246 */,
 /* 247 */,
-/* 248 */,
+/* 248 */
+/*!*****************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/api/order.js ***!
+  \*****************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.cancelOrder = cancelOrder;
+exports.createOrder = createOrder;
+exports.getOrderList = getOrderList;
+exports.payCart = payCart;
+var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 170));
+// 提交订单	地址id、支付金额、商品列表
+function createOrder(addressId, payment, goodsList) {
+  return _request.default.request({
+    url: "/orders/create",
+    method: 'post',
+    header: {
+      token: true
+    },
+    data: {
+      addressId: addressId,
+      payment: payment,
+      goodsList: goodsList
+    }
+  });
+}
+
+// 支付	订单id、支付状态
+function payCart(order_id, payStatus) {
+  return _request.default.request({
+    url: "/orders/pay",
+    method: 'put',
+    header: {
+      token: true
+    },
+    data: {
+      order_id: order_id,
+      payStatus: payStatus
+    }
+  });
+}
+
+// 获取订单列表	订单状态
+function getOrderList(params) {
+  return _request.default.request({
+    url: "/orders/list",
+    header: {
+      token: true
+    },
+    data: {
+      params: params
+    }
+  });
+}
+
+// 取消订单
+function cancelOrder(order_id, reason) {
+  return _request.default.request({
+    url: "/orders/cancel",
+    method: 'put',
+    header: {
+      token: true
+    },
+    data: {
+      order_id: order_id,
+      reason: reason
+    }
+  });
+}
+
+/***/ }),
 /* 249 */,
 /* 250 */,
 /* 251 */,
-/* 252 */
-/*!***************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-icons/icons.js ***!
-  \***************************************************************************************************************************************************/
+/* 252 */,
+/* 253 */,
+/* 254 */,
+/* 255 */,
+/* 256 */,
+/* 257 */
+/*!*******************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/api/address.js ***!
+  \*******************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.addAddress = addAddress;
+exports.deleteAddress = deleteAddress;
+exports.editAddress = editAddress;
+exports.getAddressList = getAddressList;
+exports.getDefaultAddress = getDefaultAddress;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 170));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+// 获取地址列表
+function getAddressList() {
+  return _request.default.request({
+    url: "/address/list",
+    header: {
+      token: true
+    }
+  });
+}
+
+// 获取默认地址
+function getDefaultAddress() {
+  return _request.default.request({
+    url: "/address/default",
+    header: {
+      token: true
+    }
+  });
+}
+
+// 增加地址
+function addAddress(address) {
+  return _request.default.request({
+    url: "/address/add",
+    method: "post",
+    header: {
+      token: true
+    },
+    data: _objectSpread({}, address)
+  });
+}
+
+// 更新地址
+function editAddress(address) {
+  console.log(address);
+  return _request.default.request({
+    url: "/address/edit",
+    method: "put",
+    header: {
+      token: true
+    },
+    data: _objectSpread({}, address)
+  });
+}
+
+// 删除地址
+function deleteAddress(id) {
+  console.log(id);
+  return _request.default.request({
+    url: "/address/delete",
+    method: "post",
+    header: {
+      token: true
+    },
+    data: {
+      id: id
+    }
+  });
+}
+
+/***/ }),
+/* 258 */,
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */,
+/* 263 */,
+/* 264 */,
+/* 265 */,
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */,
+/* 270 */,
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */,
+/* 276 */,
+/* 277 */,
+/* 278 */,
+/* 279 */,
+/* 280 */,
+/* 281 */,
+/* 282 */,
+/* 283 */,
+/* 284 */,
+/* 285 */,
+/* 286 */,
+/* 287 */,
+/* 288 */,
+/* 289 */,
+/* 290 */,
+/* 291 */,
+/* 292 */,
+/* 293 */,
+/* 294 */
+/*!*********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-icons/icons.js ***!
+  \*********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22080,22 +22428,22 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 253 */,
-/* 254 */,
-/* 255 */,
-/* 256 */,
-/* 257 */,
-/* 258 */,
-/* 259 */,
-/* 260 */,
-/* 261 */,
-/* 262 */,
-/* 263 */,
-/* 264 */,
-/* 265 */
-/*!***************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/mpwxs.js ***!
-  \***************************************************************************************************************************************************************/
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */,
+/* 300 */,
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/mpwxs.js ***!
+  \*********************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22169,10 +22517,10 @@ var _default = mpMixins;
 exports.default = _default;
 
 /***/ }),
-/* 266 */
-/*!******************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/bindingx.js ***!
-  \******************************************************************************************************************************************************************/
+/* 308 */
+/*!************************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/bindingx.js ***!
+  \************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22188,10 +22536,10 @@ var _default = bindIngXMixins;
 exports.default = _default;
 
 /***/ }),
-/* 267 */
-/*!*****************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/mpother.js ***!
-  \*****************************************************************************************************************************************************************/
+/* 309 */
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/mpother.js ***!
+  \***********************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22207,26 +22555,26 @@ var _default = otherMixins;
 exports.default = _default;
 
 /***/ }),
-/* 268 */,
-/* 269 */,
-/* 270 */,
-/* 271 */,
-/* 272 */,
-/* 273 */,
-/* 274 */,
-/* 275 */,
-/* 276 */,
-/* 277 */,
-/* 278 */,
-/* 279 */,
-/* 280 */,
-/* 281 */,
-/* 282 */,
-/* 283 */,
-/* 284 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-modal/props.js ***!
-  \***********************************************************************************************************************************************/
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */,
+/* 321 */,
+/* 322 */,
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-modal/props.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22325,24 +22673,101 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 285 */,
-/* 286 */,
-/* 287 */,
-/* 288 */,
-/* 289 */,
-/* 290 */,
-/* 291 */,
-/* 292 */,
-/* 293 */,
-/* 294 */,
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-icon/icons.js ***!
-  \**********************************************************************************************************************************************/
+/* 327 */,
+/* 328 */,
+/* 329 */,
+/* 330 */,
+/* 331 */,
+/* 332 */,
+/* 333 */,
+/* 334 */
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-empty/props.js ***!
+  \*****************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 内置图标名称，或图片路径，建议绝对路径
+    icon: {
+      type: String,
+      default: uni.$u.props.empty.icon
+    },
+    // 提示文字
+    text: {
+      type: String,
+      default: uni.$u.props.empty.text
+    },
+    // 文字颜色
+    textColor: {
+      type: String,
+      default: uni.$u.props.empty.textColor
+    },
+    // 文字大小
+    textSize: {
+      type: [String, Number],
+      default: uni.$u.props.empty.textSize
+    },
+    // 图标的颜色
+    iconColor: {
+      type: String,
+      default: uni.$u.props.empty.iconColor
+    },
+    // 图标的大小
+    iconSize: {
+      type: [String, Number],
+      default: uni.$u.props.empty.iconSize
+    },
+    // 选择预置的图标类型
+    mode: {
+      type: String,
+      default: uni.$u.props.empty.mode
+    },
+    //  图标宽度，单位px
+    width: {
+      type: [String, Number],
+      default: uni.$u.props.empty.width
+    },
+    // 图标高度，单位px
+    height: {
+      type: [String, Number],
+      default: uni.$u.props.empty.height
+    },
+    // 是否显示组件
+    show: {
+      type: Boolean,
+      default: uni.$u.props.empty.show
+    },
+    // 组件距离上一个元素之间的距离，默认px单位
+    marginTop: {
+      type: [String, Number],
+      default: uni.$u.props.empty.marginTop
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-icon/icons.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22570,10 +22995,10 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 300 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-icon/props.js ***!
-  \**********************************************************************************************************************************************/
+/* 343 */
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-icon/props.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22677,153 +23102,6 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */,
-/* 308 */,
-/* 309 */,
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */
-/*!************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/index.js ***!
-  \************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 316));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 317));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 318));
-var _default = {
-  en: _en.default,
-  'zh-Hans': _zhHans.default,
-  'zh-Hant': _zhHant.default
-};
-exports.default = _default;
-
-/***/ }),
-/* 316 */
-/*!***********************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/en.json ***!
-  \***********************************************************************************************************************************************************/
-/*! exports provided: uni-goods-nav.options.shop, uni-goods-nav.options.cart, uni-goods-nav.buttonGroup.addToCart, uni-goods-nav.buttonGroup.buyNow, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"shop\",\"uni-goods-nav.options.cart\":\"cart\",\"uni-goods-nav.buttonGroup.addToCart\":\"add to cart\",\"uni-goods-nav.buttonGroup.buyNow\":\"buy now\"}");
-
-/***/ }),
-/* 317 */
-/*!****************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/zh-Hans.json ***!
-  \****************************************************************************************************************************************************************/
-/*! exports provided: uni-goods-nav.options.shop, uni-goods-nav.options.cart, uni-goods-nav.buttonGroup.addToCart, uni-goods-nav.buttonGroup.buyNow, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"店铺\",\"uni-goods-nav.options.cart\":\"购物车\",\"uni-goods-nav.buttonGroup.addToCart\":\"加入购物车\",\"uni-goods-nav.buttonGroup.buyNow\":\"立即购买\"}");
-
-/***/ }),
-/* 318 */
-/*!****************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/zh-Hant.json ***!
-  \****************************************************************************************************************************************************************/
-/*! exports provided: uni-goods-nav.options.shop, uni-goods-nav.options.cart, uni-goods-nav.buttonGroup.addToCart, uni-goods-nav.buttonGroup.buyNow, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"店鋪\",\"uni-goods-nav.options.cart\":\"購物車\",\"uni-goods-nav.buttonGroup.addToCart\":\"加入購物車\",\"uni-goods-nav.buttonGroup.buyNow\":\"立即購買\"}");
-
-/***/ }),
-/* 319 */,
-/* 320 */,
-/* 321 */,
-/* 322 */,
-/* 323 */,
-/* 324 */,
-/* 325 */,
-/* 326 */,
-/* 327 */,
-/* 328 */,
-/* 329 */,
-/* 330 */,
-/* 331 */,
-/* 332 */,
-/* 333 */
-/*!*************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/index.js ***!
-  \*************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 334));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 335));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 336));
-var _default = {
-  en: _en.default,
-  'zh-Hans': _zhHans.default,
-  'zh-Hant': _zhHant.default
-};
-exports.default = _default;
-
-/***/ }),
-/* 334 */
-/*!************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/en.json ***!
-  \************************************************************************************************************************************************************/
-/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"Search enter content\"}");
-
-/***/ }),
-/* 335 */
-/*!*****************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/zh-Hans.json ***!
-  \*****************************************************************************************************************************************************************/
-/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"请输入搜索内容\"}");
-
-/***/ }),
-/* 336 */
-/*!*****************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/zh-Hant.json ***!
-  \*****************************************************************************************************************************************************************/
-/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
-/***/ (function(module) {
-
-module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"請輸入搜索內容\"}");
-
-/***/ }),
-/* 337 */,
-/* 338 */,
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
 /* 344 */,
 /* 345 */,
 /* 346 */,
@@ -22831,10 +23109,157 @@ module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-
 /* 348 */,
 /* 349 */,
 /* 350 */,
-/* 351 */
-/*!******************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-forms/validate.js ***!
-  \******************************************************************************************************************************************************/
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */
+/*!******************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/index.js ***!
+  \******************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 359));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 360));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 361));
+var _default = {
+  en: _en.default,
+  'zh-Hans': _zhHans.default,
+  'zh-Hant': _zhHant.default
+};
+exports.default = _default;
+
+/***/ }),
+/* 359 */
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/en.json ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: uni-goods-nav.options.shop, uni-goods-nav.options.cart, uni-goods-nav.buttonGroup.addToCart, uni-goods-nav.buttonGroup.buyNow, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"shop\",\"uni-goods-nav.options.cart\":\"cart\",\"uni-goods-nav.buttonGroup.addToCart\":\"add to cart\",\"uni-goods-nav.buttonGroup.buyNow\":\"buy now\"}");
+
+/***/ }),
+/* 360 */
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/zh-Hans.json ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: uni-goods-nav.options.shop, uni-goods-nav.options.cart, uni-goods-nav.buttonGroup.addToCart, uni-goods-nav.buttonGroup.buyNow, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"店铺\",\"uni-goods-nav.options.cart\":\"购物车\",\"uni-goods-nav.buttonGroup.addToCart\":\"加入购物车\",\"uni-goods-nav.buttonGroup.buyNow\":\"立即购买\"}");
+
+/***/ }),
+/* 361 */
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/zh-Hant.json ***!
+  \**********************************************************************************************************************************************************************************/
+/*! exports provided: uni-goods-nav.options.shop, uni-goods-nav.options.cart, uni-goods-nav.buttonGroup.addToCart, uni-goods-nav.buttonGroup.buyNow, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"店鋪\",\"uni-goods-nav.options.cart\":\"購物車\",\"uni-goods-nav.buttonGroup.addToCart\":\"加入購物車\",\"uni-goods-nav.buttonGroup.buyNow\":\"立即購買\"}");
+
+/***/ }),
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/index.js ***!
+  \*******************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 377));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 378));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 379));
+var _default = {
+  en: _en.default,
+  'zh-Hans': _zhHans.default,
+  'zh-Hant': _zhHant.default
+};
+exports.default = _default;
+
+/***/ }),
+/* 377 */
+/*!******************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/en.json ***!
+  \******************************************************************************************************************************************************************************/
+/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"Search enter content\"}");
+
+/***/ }),
+/* 378 */
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/zh-Hans.json ***!
+  \***********************************************************************************************************************************************************************************/
+/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"请输入搜索内容\"}");
+
+/***/ }),
+/* 379 */
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/zh-Hant.json ***!
+  \***********************************************************************************************************************************************************************************/
+/*! exports provided: uni-search-bar.cancel, uni-search-bar.placeholder, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"請輸入搜索內容\"}");
+
+/***/ }),
+/* 380 */,
+/* 381 */,
+/* 382 */,
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */
+/*!************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-forms/validate.js ***!
+  \************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -22847,9 +23272,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 59));
-var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 352));
-var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 353));
-var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 355));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 395));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 396));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 398));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 61));
 var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
 var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
@@ -23522,7 +23947,7 @@ var _default = SchemaValidator;
 exports.default = _default;
 
 /***/ }),
-/* 352 */
+/* 395 */
 /*!*********************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/inherits.js ***!
   \*********************************************************/
@@ -23549,7 +23974,7 @@ function _inherits(subClass, superClass) {
 module.exports = _inherits, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 353 */
+/* 396 */
 /*!**************************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js ***!
   \**************************************************************************/
@@ -23557,7 +23982,7 @@ module.exports = _inherits, module.exports.__esModule = true, module.exports["de
 /***/ (function(module, exports, __webpack_require__) {
 
 var _typeof = __webpack_require__(/*! ./typeof.js */ 13)["default"];
-var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized.js */ 354);
+var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized.js */ 397);
 function _possibleConstructorReturn(self, call) {
   if (call && (_typeof(call) === "object" || typeof call === "function")) {
     return call;
@@ -23569,7 +23994,7 @@ function _possibleConstructorReturn(self, call) {
 module.exports = _possibleConstructorReturn, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 354 */
+/* 397 */
 /*!**********************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/assertThisInitialized.js ***!
   \**********************************************************************/
@@ -23585,7 +24010,7 @@ function _assertThisInitialized(self) {
 module.exports = _assertThisInitialized, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 355 */
+/* 398 */
 /*!***************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/getPrototypeOf.js ***!
   \***************************************************************/
@@ -23601,10 +24026,10 @@ function _getPrototypeOf(o) {
 module.exports = _getPrototypeOf, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 356 */
-/*!***************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-forms/utils.js ***!
-  \***************************************************************************************************************************************************/
+/* 399 */
+/*!*********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-forms/utils.js ***!
+  \*********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23936,28 +24361,28 @@ var isEqual = function isEqual(a, b) {
 exports.isEqual = isEqual;
 
 /***/ }),
-/* 357 */,
-/* 358 */,
-/* 359 */,
-/* 360 */,
-/* 361 */,
-/* 362 */,
-/* 363 */,
-/* 364 */,
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
-/* 371 */,
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */,
-/* 377 */,
-/* 378 */
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */
 /*!************************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js ***!
   \************************************************************************************/
@@ -23978,14 +24403,14 @@ var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/hel
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 61));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
-var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 352));
-var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 353));
-var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 355));
-var _wrapNativeSuper2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ 379));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 395));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 396));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 398));
+var _wrapNativeSuper2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ 422));
 var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
 var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
 var _uniI18n = __webpack_require__(/*! @dcloudio/uni-i18n */ 22);
-var _pages = _interopRequireDefault(__webpack_require__(/*! @/pages.json */ 381));
+var _pages = _interopRequireDefault(__webpack_require__(/*! @/pages.json */ 424));
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e33) { throw _e33; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e34) { didErr = true; err = _e34; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
@@ -24438,7 +24863,7 @@ var k = "development" === "development",
   O = true;
 var x = "";
 try {
-  x = (__webpack_require__(/*! uni-stat-config */ 382).default || __webpack_require__(/*! uni-stat-config */ 382)).appid;
+  x = (__webpack_require__(/*! uni-stat-config */ 425).default || __webpack_require__(/*! uni-stat-config */ 425)).appid;
 } catch (e) {}
 var R = {};
 function U(e) {
@@ -31079,16 +31504,16 @@ exports.default = Us;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../webpack/buildin/global.js */ 3), __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
 
 /***/ }),
-/* 379 */
+/* 422 */
 /*!****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/wrapNativeSuper.js ***!
   \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getPrototypeOf = __webpack_require__(/*! ./getPrototypeOf.js */ 355);
+var getPrototypeOf = __webpack_require__(/*! ./getPrototypeOf.js */ 398);
 var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf.js */ 16);
-var isNativeFunction = __webpack_require__(/*! ./isNativeFunction.js */ 380);
+var isNativeFunction = __webpack_require__(/*! ./isNativeFunction.js */ 423);
 var construct = __webpack_require__(/*! ./construct.js */ 15);
 function _wrapNativeSuper(Class) {
   var _cache = typeof Map === "function" ? new Map() : undefined;
@@ -31119,7 +31544,7 @@ function _wrapNativeSuper(Class) {
 module.exports = _wrapNativeSuper, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 380 */
+/* 423 */
 /*!*****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/isNativeFunction.js ***!
   \*****************************************************************/
@@ -31132,10 +31557,10 @@ function _isNativeFunction(fn) {
 module.exports = _isNativeFunction, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 381 */
-/*!**************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/pages.json?{"type":"origin-pages-json"} ***!
-  \**************************************************************************************************************************************/
+/* 424 */
+/*!********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/pages.json?{"type":"origin-pages-json"} ***!
+  \********************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31212,6 +31637,36 @@ var _default = {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false
       }
+    }, {
+      "path": "order/order",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+    }, {
+      "path": "settlement/settlement",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+    }, {
+      "path": "address/address",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+    }, {
+      "path": "addressInfo/addressInfo",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+    }, {
+      "path": "paySuccess/paySuccess",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
     }]
   }],
   "globalStyle": {
@@ -31251,10 +31706,10 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 382 */
-/*!*************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/pages.json?{"type":"stat"} ***!
-  \*************************************************************************************************************************/
+/* 425 */
+/*!*******************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/pages.json?{"type":"stat"} ***!
+  \*******************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31271,17 +31726,17 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 383 */,
-/* 384 */,
-/* 385 */,
-/* 386 */,
-/* 387 */,
-/* 388 */,
-/* 389 */,
-/* 390 */
-/*!******************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/index.js ***!
-  \******************************************************************************************************************************************************************/
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */
+/*!************************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/index.js ***!
+  \************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31293,9 +31748,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 391));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 392));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 393));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 434));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 435));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 436));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -31304,54 +31759,426 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 391 */
-/*!*****************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/en.json ***!
-  \*****************************************************************************************************************************************************************/
+/* 434 */
+/*!***********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/en.json ***!
+  \***********************************************************************************************************************************************************************************/
 /*! exports provided: uni-datetime-picker.selectDate, uni-datetime-picker.selectTime, uni-datetime-picker.selectDateTime, uni-datetime-picker.startDate, uni-datetime-picker.endDate, uni-datetime-picker.startTime, uni-datetime-picker.endTime, uni-datetime-picker.ok, uni-datetime-picker.clear, uni-datetime-picker.cancel, uni-datetime-picker.year, uni-datetime-picker.month, uni-calender.MON, uni-calender.TUE, uni-calender.WED, uni-calender.THU, uni-calender.FRI, uni-calender.SAT, uni-calender.SUN, uni-calender.confirm, default */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"select date\",\"uni-datetime-picker.selectTime\":\"select time\",\"uni-datetime-picker.selectDateTime\":\"select datetime\",\"uni-datetime-picker.startDate\":\"start date\",\"uni-datetime-picker.endDate\":\"end date\",\"uni-datetime-picker.startTime\":\"start time\",\"uni-datetime-picker.endTime\":\"end time\",\"uni-datetime-picker.ok\":\"ok\",\"uni-datetime-picker.clear\":\"clear\",\"uni-datetime-picker.cancel\":\"cancel\",\"uni-datetime-picker.year\":\"-\",\"uni-datetime-picker.month\":\"\",\"uni-calender.MON\":\"MON\",\"uni-calender.TUE\":\"TUE\",\"uni-calender.WED\":\"WED\",\"uni-calender.THU\":\"THU\",\"uni-calender.FRI\":\"FRI\",\"uni-calender.SAT\":\"SAT\",\"uni-calender.SUN\":\"SUN\",\"uni-calender.confirm\":\"confirm\"}");
 
 /***/ }),
-/* 392 */
-/*!**********************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/zh-Hans.json ***!
-  \**********************************************************************************************************************************************************************/
+/* 435 */
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/zh-Hans.json ***!
+  \****************************************************************************************************************************************************************************************/
 /*! exports provided: uni-datetime-picker.selectDate, uni-datetime-picker.selectTime, uni-datetime-picker.selectDateTime, uni-datetime-picker.startDate, uni-datetime-picker.endDate, uni-datetime-picker.startTime, uni-datetime-picker.endTime, uni-datetime-picker.ok, uni-datetime-picker.clear, uni-datetime-picker.cancel, uni-datetime-picker.year, uni-datetime-picker.month, uni-calender.SUN, uni-calender.MON, uni-calender.TUE, uni-calender.WED, uni-calender.THU, uni-calender.FRI, uni-calender.SAT, uni-calender.confirm, default */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"选择日期\",\"uni-datetime-picker.selectTime\":\"选择时间\",\"uni-datetime-picker.selectDateTime\":\"选择日期时间\",\"uni-datetime-picker.startDate\":\"开始日期\",\"uni-datetime-picker.endDate\":\"结束日期\",\"uni-datetime-picker.startTime\":\"开始时间\",\"uni-datetime-picker.endTime\":\"结束时间\",\"uni-datetime-picker.ok\":\"确定\",\"uni-datetime-picker.clear\":\"清除\",\"uni-datetime-picker.cancel\":\"取消\",\"uni-datetime-picker.year\":\"年\",\"uni-datetime-picker.month\":\"月\",\"uni-calender.SUN\":\"日\",\"uni-calender.MON\":\"一\",\"uni-calender.TUE\":\"二\",\"uni-calender.WED\":\"三\",\"uni-calender.THU\":\"四\",\"uni-calender.FRI\":\"五\",\"uni-calender.SAT\":\"六\",\"uni-calender.confirm\":\"确认\"}");
 
 /***/ }),
-/* 393 */
-/*!**********************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/zh-Hant.json ***!
-  \**********************************************************************************************************************************************************************/
+/* 436 */
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/zh-Hant.json ***!
+  \****************************************************************************************************************************************************************************************/
 /*! exports provided: uni-datetime-picker.selectDate, uni-datetime-picker.selectTime, uni-datetime-picker.selectDateTime, uni-datetime-picker.startDate, uni-datetime-picker.endDate, uni-datetime-picker.startTime, uni-datetime-picker.endTime, uni-datetime-picker.ok, uni-datetime-picker.clear, uni-datetime-picker.cancel, uni-datetime-picker.year, uni-datetime-picker.month, uni-calender.SUN, uni-calender.MON, uni-calender.TUE, uni-calender.WED, uni-calender.THU, uni-calender.FRI, uni-calender.SAT, uni-calender.confirm, default */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"選擇日期\",\"uni-datetime-picker.selectTime\":\"選擇時間\",\"uni-datetime-picker.selectDateTime\":\"選擇日期時間\",\"uni-datetime-picker.startDate\":\"開始日期\",\"uni-datetime-picker.endDate\":\"結束日期\",\"uni-datetime-picker.startTime\":\"開始时间\",\"uni-datetime-picker.endTime\":\"結束时间\",\"uni-datetime-picker.ok\":\"確定\",\"uni-datetime-picker.clear\":\"清除\",\"uni-datetime-picker.cancel\":\"取消\",\"uni-datetime-picker.year\":\"年\",\"uni-datetime-picker.month\":\"月\",\"uni-calender.SUN\":\"日\",\"uni-calender.MON\":\"一\",\"uni-calender.TUE\":\"二\",\"uni-calender.WED\":\"三\",\"uni-calender.THU\":\"四\",\"uni-calender.FRI\":\"五\",\"uni-calender.SAT\":\"六\",\"uni-calender.confirm\":\"確認\"}");
 
 /***/ }),
-/* 394 */,
-/* 395 */,
-/* 396 */,
-/* 397 */,
-/* 398 */,
-/* 399 */,
-/* 400 */,
-/* 401 */,
-/* 402 */,
-/* 403 */,
-/* 404 */,
-/* 405 */,
-/* 406 */,
-/* 407 */,
-/* 408 */
-/*!***********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-popup/props.js ***!
-  \***********************************************************************************************************************************************/
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */,
+/* 444 */,
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */,
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */
+/*!**********************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/mixin/button.js ***!
+  \**********************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    lang: String,
+    sessionFrom: String,
+    sendMessageTitle: String,
+    sendMessagePath: String,
+    sendMessageImg: String,
+    showMessageCard: Boolean,
+    appParameter: String,
+    formType: String,
+    openType: String
+  }
+};
+exports.default = _default;
+
+/***/ }),
+/* 459 */
+/*!************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/mixin/openType.js ***!
+  \************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    openType: String
+  },
+  methods: {
+    onGetUserInfo: function onGetUserInfo(event) {
+      this.$emit('getuserinfo', event.detail);
+    },
+    onContact: function onContact(event) {
+      this.$emit('contact', event.detail);
+    },
+    onGetPhoneNumber: function onGetPhoneNumber(event) {
+      this.$emit('getphonenumber', event.detail);
+    },
+    onError: function onError(event) {
+      this.$emit('error', event.detail);
+    },
+    onLaunchApp: function onLaunchApp(event) {
+      this.$emit('launchapp', event.detail);
+    },
+    onOpenSetting: function onOpenSetting(event) {
+      this.$emit('opensetting', event.detail);
+    }
+  }
+};
+exports.default = _default;
+
+/***/ }),
+/* 460 */
+/*!******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-button/props.js ***!
+  \******************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+/*
+ * @Author       : LQ
+ * @Description  :
+ * @version      : 1.0
+ * @Date         : 2021-08-16 10:04:04
+ * @LastAuthor   : LQ
+ * @lastTime     : 2021-08-16 10:04:24
+ * @FilePath     : /u-view2.0/uview-ui/components/u-button/props.js
+ */
+var _default = {
+  props: {
+    // 是否细边框
+    hairline: {
+      type: Boolean,
+      default: uni.$u.props.button.hairline
+    },
+    // 按钮的预置样式，info，primary，error，warning，success
+    type: {
+      type: String,
+      default: uni.$u.props.button.type
+    },
+    // 按钮尺寸，large，normal，small，mini
+    size: {
+      type: String,
+      default: uni.$u.props.button.size
+    },
+    // 按钮形状，circle（两边为半圆），square（带圆角）
+    shape: {
+      type: String,
+      default: uni.$u.props.button.shape
+    },
+    // 按钮是否镂空
+    plain: {
+      type: Boolean,
+      default: uni.$u.props.button.plain
+    },
+    // 是否禁止状态
+    disabled: {
+      type: Boolean,
+      default: uni.$u.props.button.disabled
+    },
+    // 是否加载中
+    loading: {
+      type: Boolean,
+      default: uni.$u.props.button.loading
+    },
+    // 加载中提示文字
+    loadingText: {
+      type: [String, Number],
+      default: uni.$u.props.button.loadingText
+    },
+    // 加载状态图标类型
+    loadingMode: {
+      type: String,
+      default: uni.$u.props.button.loadingMode
+    },
+    // 加载图标大小
+    loadingSize: {
+      type: [String, Number],
+      default: uni.$u.props.button.loadingSize
+    },
+    // 开放能力，具体请看uniapp稳定关于button组件部分说明
+    // https://uniapp.dcloud.io/component/button
+    openType: {
+      type: String,
+      default: uni.$u.props.button.openType
+    },
+    // 用于 <form> 组件，点击分别会触发 <form> 组件的 submit/reset 事件
+    // 取值为submit（提交表单），reset（重置表单）
+    formType: {
+      type: String,
+      default: uni.$u.props.button.formType
+    },
+    // 打开 APP 时，向 APP 传递的参数，open-type=launchApp时有效
+    // 只微信小程序、QQ小程序有效
+    appParameter: {
+      type: String,
+      default: uni.$u.props.button.appParameter
+    },
+    // 指定是否阻止本节点的祖先节点出现点击态，微信小程序有效
+    hoverStopPropagation: {
+      type: Boolean,
+      default: uni.$u.props.button.hoverStopPropagation
+    },
+    // 指定返回用户信息的语言，zh_CN 简体中文，zh_TW 繁体中文，en 英文。只微信小程序有效
+    lang: {
+      type: String,
+      default: uni.$u.props.button.lang
+    },
+    // 会话来源，open-type="contact"时有效。只微信小程序有效
+    sessionFrom: {
+      type: String,
+      default: uni.$u.props.button.sessionFrom
+    },
+    // 会话内消息卡片标题，open-type="contact"时有效
+    // 默认当前标题，只微信小程序有效
+    sendMessageTitle: {
+      type: String,
+      default: uni.$u.props.button.sendMessageTitle
+    },
+    // 会话内消息卡片点击跳转小程序路径，open-type="contact"时有效
+    // 默认当前分享路径，只微信小程序有效
+    sendMessagePath: {
+      type: String,
+      default: uni.$u.props.button.sendMessagePath
+    },
+    // 会话内消息卡片图片，open-type="contact"时有效
+    // 默认当前页面截图，只微信小程序有效
+    sendMessageImg: {
+      type: String,
+      default: uni.$u.props.button.sendMessageImg
+    },
+    // 是否显示会话内消息卡片，设置此参数为 true，用户进入客服会话会在右下角显示"可能要发送的小程序"提示，
+    // 用户点击后可以快速发送小程序消息，open-type="contact"时有效
+    showMessageCard: {
+      type: Boolean,
+      default: uni.$u.props.button.showMessageCard
+    },
+    // 额外传参参数，用于小程序的data-xxx属性，通过target.dataset.name获取
+    dataName: {
+      type: String,
+      default: uni.$u.props.button.dataName
+    },
+    // 节流，一定时间内只能触发一次
+    throttleTime: {
+      type: [String, Number],
+      default: uni.$u.props.button.throttleTime
+    },
+    // 按住后多久出现点击态，单位毫秒
+    hoverStartTime: {
+      type: [String, Number],
+      default: uni.$u.props.button.hoverStartTime
+    },
+    // 手指松开后点击态保留时间，单位毫秒
+    hoverStayTime: {
+      type: [String, Number],
+      default: uni.$u.props.button.hoverStayTime
+    },
+    // 按钮文字，之所以通过props传入，是因为slot传入的话
+    // nvue中无法控制文字的样式
+    text: {
+      type: [String, Number],
+      default: uni.$u.props.button.text
+    },
+    // 按钮图标
+    icon: {
+      type: String,
+      default: uni.$u.props.button.icon
+    },
+    // 按钮图标
+    iconColor: {
+      type: String,
+      default: uni.$u.props.button.icon
+    },
+    // 按钮颜色，支持传入linear-gradient渐变色
+    color: {
+      type: String,
+      default: uni.$u.props.button.color
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */,
+/* 467 */,
+/* 468 */,
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */,
+/* 473 */,
+/* 474 */,
+/* 475 */,
+/* 476 */,
+/* 477 */,
+/* 478 */,
+/* 479 */,
+/* 480 */,
+/* 481 */,
+/* 482 */,
+/* 483 */,
+/* 484 */,
+/* 485 */,
+/* 486 */,
+/* 487 */,
+/* 488 */,
+/* 489 */
+/*!******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-switch/props.js ***!
+  \******************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  props: {
+    // 是否为加载中状态
+    loading: {
+      type: Boolean,
+      default: uni.$u.props.switch.loading
+    },
+    // 是否为禁用装填
+    disabled: {
+      type: Boolean,
+      default: uni.$u.props.switch.disabled
+    },
+    // 开关尺寸，单位px
+    size: {
+      type: [String, Number],
+      default: uni.$u.props.switch.size
+    },
+    // 打开时的背景颜色
+    activeColor: {
+      type: String,
+      default: uni.$u.props.switch.activeColor
+    },
+    // 关闭时的背景颜色
+    inactiveColor: {
+      type: String,
+      default: uni.$u.props.switch.inactiveColor
+    },
+    // 通过v-model双向绑定的值
+    value: {
+      type: [Boolean, String, Number],
+      default: uni.$u.props.switch.value
+    },
+    // switch打开时的值
+    activeValue: {
+      type: [String, Number, Boolean],
+      default: uni.$u.props.switch.activeValue
+    },
+    // switch关闭时的值
+    inactiveValue: {
+      type: [String, Number, Boolean],
+      default: uni.$u.props.switch.inactiveValue
+    },
+    // 是否开启异步变更，开启后需要手动控制输入值
+    asyncChange: {
+      type: Boolean,
+      default: uni.$u.props.switch.asyncChange
+    },
+    // 圆点与外边框的距离
+    space: {
+      type: [String, Number],
+      default: uni.$u.props.switch.space
+    }
+  }
+};
+exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 490 */,
+/* 491 */,
+/* 492 */,
+/* 493 */,
+/* 494 */,
+/* 495 */,
+/* 496 */,
+/* 497 */,
+/* 498 */,
+/* 499 */,
+/* 500 */,
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */
+/*!*****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-popup/props.js ***!
+  \*****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31445,17 +32272,17 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 409 */,
-/* 410 */,
-/* 411 */,
-/* 412 */,
-/* 413 */,
-/* 414 */,
-/* 415 */,
-/* 416 */
-/*!**********************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-line/props.js ***!
-  \**********************************************************************************************************************************************/
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */,
+/* 511 */,
+/* 512 */
+/*!****************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-line/props.js ***!
+  \****************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31503,17 +32330,17 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 417 */,
-/* 418 */,
-/* 419 */,
-/* 420 */,
-/* 421 */,
-/* 422 */,
-/* 423 */,
-/* 424 */
-/*!******************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
-  \******************************************************************************************************************************************************/
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */
+/*!************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
+  \************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31587,17 +32414,17 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 425 */,
-/* 426 */,
-/* 427 */,
-/* 428 */,
-/* 429 */,
-/* 430 */,
-/* 431 */,
-/* 432 */
-/*!************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/index.js ***!
-  \************************************************************************************************************************************************************/
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */
+/*!******************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/index.js ***!
+  \******************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -31609,9 +32436,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 433));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 434));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 435));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 529));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 530));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 531));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -31620,47 +32447,47 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 433 */
-/*!***********************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/en.json ***!
-  \***********************************************************************************************************************************************************/
+/* 529 */
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/en.json ***!
+  \*****************************************************************************************************************************************************************************/
 /*! exports provided: uni-load-more.contentdown, uni-load-more.contentrefresh, uni-load-more.contentnomore, default */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show more\",\"uni-load-more.contentrefresh\":\"loading...\",\"uni-load-more.contentnomore\":\"No more data\"}");
 
 /***/ }),
-/* 434 */
-/*!****************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hans.json ***!
-  \****************************************************************************************************************************************************************/
+/* 530 */
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hans.json ***!
+  \**********************************************************************************************************************************************************************************/
 /*! exports provided: uni-load-more.contentdown, uni-load-more.contentrefresh, uni-load-more.contentnomore, default */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多\",\"uni-load-more.contentrefresh\":\"正在加载...\",\"uni-load-more.contentnomore\":\"没有更多数据了\"}");
 
 /***/ }),
-/* 435 */
-/*!****************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hant.json ***!
-  \****************************************************************************************************************************************************************/
+/* 531 */
+/*!**********************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hant.json ***!
+  \**********************************************************************************************************************************************************************************/
 /*! exports provided: uni-load-more.contentdown, uni-load-more.contentrefresh, uni-load-more.contentnomore, default */
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉顯示更多\",\"uni-load-more.contentrefresh\":\"正在加載...\",\"uni-load-more.contentnomore\":\"沒有更多數據了\"}");
 
 /***/ }),
-/* 436 */,
-/* 437 */,
-/* 438 */,
-/* 439 */,
-/* 440 */,
-/* 441 */,
-/* 442 */,
-/* 443 */
-/*!************************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/util.js ***!
-  \************************************************************************************************************************************************************/
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */
+/*!******************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/util.js ***!
+  \******************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32126,24 +32953,163 @@ var _default = Calendar;
 exports.default = _default;
 
 /***/ }),
-/* 444 */,
-/* 445 */,
-/* 446 */,
-/* 447 */,
-/* 448 */,
-/* 449 */,
-/* 450 */,
-/* 451 */,
-/* 452 */,
-/* 453 */,
-/* 454 */,
-/* 455 */,
-/* 456 */,
-/* 457 */,
-/* 458 */
-/*!*************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-overlay/props.js ***!
-  \*************************************************************************************************************************************************/
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */
+/*!************************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-transition/createAnimation.js ***!
+  \************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createAnimation = createAnimation;
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
+var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
+var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { (0, _defineProperty2.default)(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+// const defaultOption = {
+// 	duration: 300,
+// 	timingFunction: 'linear',
+// 	delay: 0,
+// 	transformOrigin: '50% 50% 0'
+// }
+var MPAnimation = /*#__PURE__*/function () {
+  function MPAnimation(options, _this) {
+    (0, _classCallCheck2.default)(this, MPAnimation);
+    this.options = options;
+    // 在iOS10+QQ小程序平台下，传给原生的对象一定是个普通对象而不是Proxy对象，否则会报parameter should be Object instead of ProxyObject的错误
+    this.animation = uni.createAnimation(_objectSpread({}, options));
+    this.currentStepAnimates = {};
+    this.next = 0;
+    this.$ = _this;
+  }
+  (0, _createClass2.default)(MPAnimation, [{
+    key: "_nvuePushAnimates",
+    value: function _nvuePushAnimates(type, args) {
+      var aniObj = this.currentStepAnimates[this.next];
+      var styles = {};
+      if (!aniObj) {
+        styles = {
+          styles: {},
+          config: {}
+        };
+      } else {
+        styles = aniObj;
+      }
+      if (animateTypes1.includes(type)) {
+        if (!styles.styles.transform) {
+          styles.styles.transform = '';
+        }
+        var unit = '';
+        if (type === 'rotate') {
+          unit = 'deg';
+        }
+        styles.styles.transform += "".concat(type, "(").concat(args + unit, ") ");
+      } else {
+        styles.styles[type] = "".concat(args);
+      }
+      this.currentStepAnimates[this.next] = styles;
+    }
+  }, {
+    key: "_animateRun",
+    value: function _animateRun() {
+      var styles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var ref = this.$.$refs['ani'].ref;
+      if (!ref) return;
+      return new Promise(function (resolve, reject) {
+        nvueAnimation.transition(ref, _objectSpread({
+          styles: styles
+        }, config), function (res) {
+          resolve();
+        });
+      });
+    }
+  }, {
+    key: "_nvueNextAnimate",
+    value: function _nvueNextAnimate(animates) {
+      var _this2 = this;
+      var step = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var fn = arguments.length > 2 ? arguments[2] : undefined;
+      var obj = animates[step];
+      if (obj) {
+        var styles = obj.styles,
+          config = obj.config;
+        this._animateRun(styles, config).then(function () {
+          step += 1;
+          _this2._nvueNextAnimate(animates, step, fn);
+        });
+      } else {
+        this.currentStepAnimates = {};
+        typeof fn === 'function' && fn();
+        this.isEnd = true;
+      }
+    }
+  }, {
+    key: "step",
+    value: function step() {
+      var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      this.animation.step(config);
+      return this;
+    }
+  }, {
+    key: "run",
+    value: function run(fn) {
+      this.$.animationData = this.animation.export();
+      this.$.timer = setTimeout(function () {
+        typeof fn === 'function' && fn();
+      }, this.$.durationTime);
+    }
+  }]);
+  return MPAnimation;
+}();
+var animateTypes1 = ['matrix', 'matrix3d', 'rotate', 'rotate3d', 'rotateX', 'rotateY', 'rotateZ', 'scale', 'scale3d', 'scaleX', 'scaleY', 'scaleZ', 'skew', 'skewX', 'skewY', 'translate', 'translate3d', 'translateX', 'translateY', 'translateZ'];
+var animateTypes2 = ['opacity', 'backgroundColor'];
+var animateTypes3 = ['width', 'height', 'left', 'right', 'top', 'bottom'];
+animateTypes1.concat(animateTypes2, animateTypes3).forEach(function (type) {
+  MPAnimation.prototype[type] = function () {
+    var _this$animation;
+    (_this$animation = this.animation)[type].apply(_this$animation, arguments);
+    return this;
+  };
+});
+function createAnimation(option, _this) {
+  if (!_this) return;
+  clearTimeout(_this.timer);
+  return new MPAnimation(option, _this);
+}
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
+
+/***/ }),
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */
+/*!*******************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-overlay/props.js ***!
+  \*******************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32182,17 +33148,17 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 459 */,
-/* 460 */,
-/* 461 */,
-/* 462 */,
-/* 463 */,
-/* 464 */,
-/* 465 */,
-/* 466 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-transition/props.js ***!
-  \****************************************************************************************************************************************************/
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-transition/props.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32231,10 +33197,10 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 467 */
-/*!*********************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-transition/transition.js ***!
-  \*********************************************************************************************************************************************************/
+/* 569 */
+/*!***************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-transition/transition.js ***!
+  \***************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32248,7 +33214,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 59));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 61));
-var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 468));
+var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 570));
 // 定义一个一定时间后自动成功的promise，让调用nextTick方法处，进入下一个then方法
 var nextTick = function nextTick() {
   return new Promise(function (resolve) {
@@ -32340,10 +33306,10 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 468 */
-/*!***********************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-transition/nvue.ani-map.js ***!
-  \***********************************************************************************************************************************************************/
+/* 570 */
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-transition/nvue.ani-map.js ***!
+  \*****************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32533,17 +33499,17 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 469 */,
-/* 470 */,
-/* 471 */,
-/* 472 */,
-/* 473 */,
-/* 474 */,
-/* 475 */,
-/* 476 */
-/*!****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-status-bar/props.js ***!
-  \****************************************************************************************************************************************************/
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */
+/*!**********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-status-bar/props.js ***!
+  \**********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32566,17 +33532,17 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 477 */,
-/* 478 */,
-/* 479 */,
-/* 480 */,
-/* 481 */,
-/* 482 */,
-/* 483 */,
-/* 484 */
-/*!*****************************************************************************************************************************************************!*\
-  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/test/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
-  \*****************************************************************************************************************************************************/
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */
+/*!***********************************************************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
+  \***********************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 

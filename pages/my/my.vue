@@ -15,31 +15,31 @@
 		</view>
 		<!-- 我的订单，代付款 -->
 		<view class="order">
-			<view class="order-item" @click="navigateTo('/pages/order/myOrder?status=1')">
+			<view class="order-item" @click="navigateTo('/subpkg/order/order?status=1')">
 				<view class="bag bag2">
 					<u-icon name="bag-fill" size="35" color="#fff"></u-icon>
 				</view>
 				<view>待付款</view>
 			</view>
-			<view class="order-item" @click="navigateTo('/pages/order/myOrder?status=3')">
+			<view class="order-item" @click="navigateTo('/subpkg/order/order?status=3')">
 				<view class="bag bag3">
 					<u-icon name="car-fill" size="35" color="#fff"></u-icon>
 				</view>
 				<view>待收货</view>
 			</view>
-			<view class="order-item" @click="navigateTo('/pages/order/evaluate/myEvaluate')">
+			<view class="order-item">
 				<view class="bag bag4">
 					<u-icon name="star-fill" size="35" color="#fff"></u-icon>
 				</view>
 				<view>待评价</view>
 			</view>
-			<view class="order-item" @click="navigateTo('/pages/order/afterSales/afterSales')">
+			<view class="order-item">
 				<view class="bag bag5">
 					<u-icon name="server-fill" size="35" color="#fff"></u-icon>
 				</view>
 				<view>售后</view>
 			</view>
-			<view class="order-item" @click="navigateTo('/pages/order/myOrder?status=0')">
+			<view class="order-item" @click="navigateTo('/subpkg/order/order?status=0')">
 				<view class="bag bag1">
 					<u-icon name="order" size="35" color="#fff"></u-icon>
 				</view>
@@ -62,6 +62,7 @@
 		data() {
 			return {
 				userInfo: {},
+				myUserInfo:{}
 			};
 		},
 		components: {
@@ -73,18 +74,17 @@
 			uni.login({
 				success: (res) => {
 					that.code = res.code;
-					console.log("wx.login的code");
-					console.log(that.code);
+					// console.log("wx.login的code");
+					// console.log(that.code);
 				},
 			});
 		},
-		computed: {
-			// 将 m_user 模块中的 userinfo 映射到当前页面中使用
-			// ...mapState('m_user', ['userInfo']),
-		},
 		onShow() {
-			this.userInfo = JSON.parse(uni.getStorageSync('userinfo') || '{}');
-			console.log(this.userInfo);
+			this.getUserInfo()
+			// this.userInfo = JSON.parse(uni.getStorageSync('userinfo') || '{}');
+			// console.log("获取用户信息");
+			// console.log(this.userInfo);
+			// console.log(this.$store.state.user.userinfo);
 		},
 		methods: {
 			navigateTo(url) {
@@ -101,6 +101,14 @@
 				this.navigateTo("/subpkg/user_info/user_info") :
 				this.navigateTo("/subpkg/login/login");
 
+			},
+			// 从本地获取用户数据
+			getUserInfo(){
+				setTimeout(() => {
+				  // 获取数据
+				  this.userInfo = JSON.parse(uni.getStorageSync('userinfo') || '{}');
+				  console.log(this.userInfo); // 获取到最新的数据
+				}, 100);
 			}
 		}
 	}

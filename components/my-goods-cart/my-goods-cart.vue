@@ -7,7 +7,7 @@
 				<!-- radio是单项选择器组件 -->
 				<radio checked color="#C00000" :checked="goods.goods_state" @click="radioClickHandler">
 				</radio>
-				<image :src="goods.img_md || defaultPic" class="goods-pic"></image>
+				<image :src="goods.img_md" class="goods-pic"></image>
 			</view>
 			<!-- 商品右侧信息区域 -->
 			<view class="goods-item-right">
@@ -40,8 +40,7 @@
 		},
 		data() {
 			return {
-				// 默认的空图片
-				defaultPic: 'https://img3.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/celebrity-default-medium.png'
+			
 			}
 		},
 		filters: {
@@ -49,6 +48,9 @@
 			tofixed(num) {
 				return Number(num).toFixed(2)
 			}
+		},
+		mounted() {
+			// console.log(this.goods);
 		},
 		methods: {
 			// radio 组件的点击事件处理函数

@@ -9,7 +9,7 @@ export default {
 		// 登录成功之后的 token 字符串
 		token: uni.getStorageSync('token') || '',
 		// 用户的基本信息
-		userInfo: JSON.parse(uni.getStorageSync('userinfo') || '{}'),
+		userinfo: JSON.parse(uni.getStorageSync('userinfo') || '{}'),
 		// 重定向的 object 对象 { openType, from }
 		redirectInfo: null
 	}),
@@ -19,38 +19,46 @@ export default {
 		// 更新收货地址
 		updateAddress(state, address) {
 			state.address = address
-			// 2. 通过 this.commit() 方法，调用 m_user 模块下的 saveAddressToStorage 方法将 address 对象持久化存储到本地
-			this.commit('m_user/saveAddressToStorage')
+			// 2. 通过 this.commit() 方法，调用 user 模块下的 saveAddressToStorage 方法将 address 对象持久化存储到本地
+			this.commit('user/saveAddressToStorage')
 		},
-		// 1. 定义将 address 持久化存储到本地 mutations 方法
+		// 定义将 address 持久化存储到本地 mutations 方法
 		saveAddressToStorage(state) {
 			uni.setStorageSync('address', JSON.stringify(state.address))
 		},
 		// 更新用户的基本信息
 		updateUserInfo(state, userinfo) {
 			state.userinfo = userinfo
-			// 通过 this.commit() 方法，调用 m_user 模块下的 saveUserInfoToStorage 方法，将 userinfo 对象持久化存储到本地
-			this.commit('m_user/saveUserInfoToStorage')
-			console.log("用户信息更新完毕");
+			// 通过 this.commit() 方法，调用 user 模块下的 saveUserInfoToStorage 方法，将 userinfo 对象持久化存储到本地
+			this.commit('user/saveUserInfoToStorage')
+			// console.log("vuex---用户信息更新完毕");
+			// console.log(state.userinfo);
 		},
 		// 将 userinfo 持久化存储到本地
 		saveUserInfoToStorage(state) {
 			uni.setStorageSync('userinfo', JSON.stringify(state.userinfo))
-			console.log("将用户信息存储到本地");
+			// console.log("vuex---将用户信息存储到本地");
 		},
 		// 更新 token 字符串
 		updateToken(state, token) {
 			state.token = token
-			// 通过 this.commit() 方法，调用 m_user 模块下的 saveTokenToStorage 方法，将 token 字符串持久化存储到本地
-			this.commit('m_user/saveTokenToStorage')
+			// 通过 this.commit() 方法，调用 user 模块下的 saveTokenToStorage 方法，将 token 字符串持久化存储到本地
+			this.commit('user/saveTokenToStorage');
+			// console.log("vuex---用户token更新完毕");
+			// console.log(state.token);
 		},
 		// 将 token 字符串持久化存储到本地
 		saveTokenToStorage(state) {
 			uni.setStorageSync('token', state.token)
+			// console.log("vuex---将用户token存储到本地");
 		},
-		// 删除userinfo
+		// 删除userinfo用户信息
 		removeUserInfoStorage(state) {
 			uni.removeStorageSync('userinfo');
+			uni.removeStorageSync('token');
+			uni.removeStorageSync('address');
+			uni.removeStorageSync('kw');
+			uni.removeStorageSync('cart');
 		},
 		// 更新重定向的信息对象
 		updateRedirectInfo(state, info) {

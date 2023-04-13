@@ -51,6 +51,7 @@
 </template>
 
 <script>
+	import { baseUrl } from '../../config/config.js';
 	import {
 		getSwiperList,
 		getNavList,
@@ -96,18 +97,22 @@
 			//  获取轮播图数据
 			async swiper() {
 				let res = await getSwiperList();
-				console.log("获取的数据");
-				console.log(res);
+				// console.log("获取的数据");
+				// console.log(res);
 				this.swiperList = res.message
-				console.log("首页轮播图");
-				console.log(this.swiperList);
+				// this.swiperList.forEach((item)=>{
+				// 	// console.log(item);
+				// 	item.image_src = baseUrl + '/' + item.image_src
+				// })
+				// console.log("首页轮播图");
+				// console.log(this.swiperList);
 			},
 			// 获取分类导航数据
 			async nav() {
 				let res = await getNavList();
 				this.navList = res.message
-				console.log("首页分类导航");
-				console.log(this.navList);
+				// console.log("首页分类导航");
+				// console.log(this.navList);
 			},
 			// nav-item 项被点击时候的事件处理函数
 			navClickHandler(item) {
@@ -121,33 +126,33 @@
 			// 获取楼层标题
 			async floorTitle() {
 				let res = await getFloorTitle();
-				console.log("楼层标题");
-				console.log(res);
+				// console.log("楼层标题");
+				// console.log(res);
 				this.title = res.message;
-				console.log(this.title);
+				// console.log(this.title);
 			},
 			// 获取楼层数据
 			async floorData() {
 				let res = await getFloorList();
-				console.log("楼层内容1");
-				console.log(res);
+				// console.log("楼层内容1");
+				// console.log(res);
 				this.data = res.message;
-				console.log("楼层内容2");
-				console.log(this.data);
+				// console.log("楼层内容2");
+				// console.log(this.data);
 				for (let i = 0; i < this.title.length; i++) {
 					this.floorList[i].floor_title = this.title[i];
 					this.floorList[i].product_list = this.data.slice(i * 5, i * 5 + 5)
 				}
-				console.log("楼层数据");
-				console.log(this.floorList);
+				// console.log("楼层数据");
+				// console.log(this.floorList);
 				// 通过双层 forEach 循环，处理 URL 地址
 				this.floorList.forEach(floor => {
 					floor.product_list.forEach(prod => {
 						prod.url = '/subpkg/goods_list/goods_list?query=' + prod.name;
 					})
 				})
-				console.log("添加url的楼层数据");
-				console.log(this.floorList);
+				// console.log("添加url的楼层数据");
+				// console.log(this.floorList);
 			},
 			gotoSearch() {
 				// uni.navigateTo() 保留当前页面，跳转到应用内的某个页面

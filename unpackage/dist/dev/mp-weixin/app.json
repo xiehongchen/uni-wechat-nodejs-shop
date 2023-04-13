@@ -13,7 +13,12 @@
         "goods_list/goods_list",
         "search/search",
         "login/login",
-        "user_info/user_info"
+        "user_info/user_info",
+        "order/order",
+        "settlement/settlement",
+        "address/address",
+        "addressInfo/addressInfo",
+        "paySuccess/paySuccess"
       ]
     }
   ],
@@ -53,8 +58,13 @@
     ]
   },
   "requiredPrivateInfos": [
-    "chooseAddress"
+    "chooseAddress",
+    "getLocation"
   ],
-  "permission": {},
+  "permission": {
+    "scope.userLocation": {
+      "desc": "为了您更好的体验，请确认获取您的位置"
+    }
+  },
   "usingComponents": {}
 }

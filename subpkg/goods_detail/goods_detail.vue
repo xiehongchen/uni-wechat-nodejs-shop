@@ -43,9 +43,9 @@
 				<rich-text :nodes="goods_info.goods_details"></rich-text>
 			</view>
 			<view v-else>
-				<image src="/static/index/shangpinjieshao.png" ></image>
+				<image src="/static/index/shangpinjieshao.png"></image>
 			</view>
-			
+
 		</view>
 
 
@@ -70,7 +70,12 @@
 		mapMutations,
 		mapGetters
 	} from 'vuex'
-	import {getGoodsDetail} from '@/api/goods.js'
+	import {
+		getGoodsDetail
+	} from '@/api/goods.js'
+	import {
+		setCartList
+	} from '../../api/cart.js'
 	export default {
 		data() {
 			return {
@@ -105,18 +110,18 @@
 			// 获取商品 Id
 			const goods_id = options.goods_id
 			// 调用请求商品详情数据的方法
-			console.log("商品id");
-			console.log(goods_id);
+			// console.log("商品id");
+			// console.log(goods_id);
 			this.goodsDetail(goods_id)
 		},
 		computed: {
-			// 调用 mapState 方法，把 m_cart 模块中的 cart 数组映射到当前页面中，作为计算属性来使用
+			// 调用 mapState 方法，把 cart 模块中的 cart 数组映射到当前页面中，作为计算属性来使用
 			// ...mapState('模块的名称', ['要映射的数据名称1', '要映射的数据名称2'])
-			...mapState('m_cart', ['cart']),
+			...mapState('cart', ['cart']),
 			// 今后无论映射 mutations 方法，还是 getters 属性，还是 state 中的数据，都需要指定模块的名称，才能进行映射
 
-			// 把 m_cart 模块中名称为 total 的 getter 映射到当前页面中使用
-			...mapGetters('m_cart', ['total']),
+			// 把 cart 模块中名称为 total 的 getter 映射到当前页面中使用
+			...mapGetters('cart', ['total']),
 		},
 		methods: {
 			// 定义请求商品详情数据的方法
@@ -133,11 +138,11 @@
 				// res.message.goods_introduce = res.message.goods_introduce.replace(/<img /g,'<img style="display:block;" ').replace(/webp/g, 'jpg')
 				// 为 data 中的数据赋值
 				this.goods_info = res.message
-				console.log("商品详情");
-				console.log(this.goods_info);
+				// console.log("商品详情");
+				// console.log(this.goods_info);
 				this.goods_swiper = this.goods_info.pics.split(',');
-				console.log("商品轮播图");
-				console.log(this.goods_swiper);
+				// console.log("商品轮播图");
+				// console.log(this.goods_swiper);
 			},
 			// 实现轮播图的预览效果
 			preview(index) {
@@ -158,13 +163,16 @@
 					})
 				}
 			},
-			// 把 m_cart 模块中的 addToCart 方法映射到当前页面使用
-			...mapMutations('m_cart', ['addToCart']),
+			// 把 cart 模块中的 addToCart 方法映射到当前页面使用
+			...mapMutations('cart', ['addToCart']),
 			// 右侧按钮的点击事件处理函数
 			buttonClick(e) {
+				console.log(e);
 				// 1. 判断是否点击了 加入购物车 按钮
 				if (e.content.text === '加入购物车') {
-
+					setCartList(this.goods_info.goods_id).then((res)=>{
+						console.log("------------");
+					})
 					// 2. 组织一个商品的信息对象
 					const goods = {
 						goods_id: this.goods_info.goods_id, // 商品的Id
@@ -174,7 +182,8 @@
 						img_md: this.goods_info.img_md, // 商品的图片
 						goods_state: true // 商品的勾选状态
 					}
-
+					// console.log("加入购物车");
+					// console.log(goods);
 					// 3. 通过 this 调用映射过来的 addToCart 方法，把商品信息对象存储到购物车中
 					this.addToCart(goods)
 				}
@@ -273,7 +282,7 @@
 			.goods-detail-item {
 				font-size: 12px;
 				margin: 10px 0px;
-				
+
 				border-bottom: 2px solid #122FA7;
 
 			}

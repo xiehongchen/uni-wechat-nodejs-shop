@@ -151,7 +151,7 @@
 			flex-wrap: wrap;
 
 			.cate-lv3-item {
-				width: 33.33%;
+				width: 25%;
 				margin-bottom: 10px;
 				display: flex;
 				flex-direction: column;

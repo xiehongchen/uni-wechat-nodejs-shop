@@ -30,6 +30,10 @@
 	import {
 		mapMutations
 	} from 'vuex'
+	import {
+		setInfo,
+		removeInfo
+	} from '@/api/user.js'
 	export default {
 		data() {
 			return {
@@ -47,15 +51,29 @@
 		},
 		onShow() {
 			this.userInfo = JSON.parse(uni.getStorageSync('userinfo'));
-			console.log(this.userInfo.gender);
+			console.log("用户开始更新用户信息");
+			console.log(this.userInfo);
+			
 		},
 		methods: {
-			...mapMutations('m_user', ['updateUserInfo', 'updateToken', 'updateRedirectInfo', 'removeUserInfoStorage']),
+			...mapMutations('user', ['updateUserInfo', 'updateRedirectInfo', 'removeUserInfoStorage']),
 			// 保存数据
 			submit() {
-				// 保存信息到本地
-				this.updateUserInfo(this.userInfo);
+				console.log("用户开始提交用户信息");
 				console.log(this.userInfo);
+				setInfo(this.userInfo).then((res)=>{
+					console.log("返回结果");
+					console.log(res);
+					if(res.status == 200){
+						console.log("保存信息到本地");
+						// 保存信息到本地
+						this.updateUserInfo(this.userInfo);
+					}
+				});
+				// console.log(this.userInfo);
+				// uni.switchTab({
+				// 	url:'/pages/my/my'
+				// })
 				uni.navigateBack({
 					delta: 1
 				});
@@ -69,6 +87,9 @@
 			},
 			// 确认按钮
 			confirm() {
+				removeInfo().then((res)=>{
+					console.log(res);
+				})
 				this.clear();
 				this.show = false;
 				uni.navigateBack({

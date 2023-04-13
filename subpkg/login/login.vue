@@ -9,8 +9,8 @@
 					去授权
 				</button>
 			</view>
-
 		</u-modal>
+		
 		<view class="wx-auth-container">
 			<view class="box">
 				<view class="logo-info">
@@ -61,7 +61,7 @@
 			});
 		},
 		methods: {
-			...mapMutations('m_user', ['updateUserInfo', 'updateToken', 'updateRedirectInfo']),
+			...mapMutations('user', ['updateUserInfo', 'updateToken', 'updateRedirectInfo']),
 			// 返回上一页
 			back() {
 				uni.navigateBack({
@@ -78,17 +78,23 @@
 					success: async (res) => {
 						console.log("获取用户信息成功");
 						console.log(res);
+						let userInfo = res.userInfo;
 						//展示手机号获取授权
 						// this.show = true;
 						// 获取token
 						console.log("获取code");
 						console.log(that.code);
-						let result = await userLogin(that.code);
+						// let result = await userLogin(that.code);
+						await userLogin(that.code).then((res)=>{
+							console.log("保存用户信息到本地");
+							console.log(res);
+							// 保存用户信息到本地
+							userInfo.birth = "";
+							that.updateUserInfo(userInfo);
+							that.updateToken(res.token);
+						})
 						console.log("获取token");
-						console.log(result);
-						// 保存用户信息到本地
-						that.updateUserInfo(res.userInfo);
-						that.updateToken(result.token);
+												
 						uni.navigateBack({
 							delta: 1
 						});

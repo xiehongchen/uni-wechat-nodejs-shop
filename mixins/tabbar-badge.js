@@ -5,7 +5,7 @@ import {
 // 导出一个 mixin 对象
 export default {
 	computed: {
-		...mapGetters('m_cart', ['total']),
+		...mapGetters('cart', ['total']),
 	},
 	watch: {
 		// 监听 total 值的变化
