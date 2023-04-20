@@ -31,6 +31,20 @@
 /*用于金钱等颜色 */
 /*主题高亮颜色*/
 /*辅助高亮颜色*/
+.coupon-box {
+  background-color: #fff;
+  border-radius: 10px;
+  margin: 10px 2px;
+  padding: 15px 10px;
+}
+.coupon-box .coupon {
+  display: flex;
+  justify-content: space-between;
+}
+.coupon-box .coupon .price-text {
+  font-size: 20px;
+  color: #ff0000;
+}
 .pay-box {
   background-color: #fff;
   border-radius: 10px;

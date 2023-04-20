@@ -176,16 +176,12 @@ export default {
 		};
 	},
 	onLoad(options) {
-		console.log(options);
-		let num = options.status;
-		if (num) {
-			this.currentIndex = num;
-		}
+		// console.log(options);
+		this.currentIndex = options.status;
 	},
 	onShow() {
 		// 初始化数据
 		this.initData(this.currentIndex);
-
 	},
 	// 页面触底事件的处理函数
 	onReachBottom() { },
@@ -204,7 +200,7 @@ export default {
 	},
 	methods: {
 		change(e) {
-			// console.log(e.detail.value);
+			// console.log("change");
 			// console.log(this.cancelList[e.detail.value].name);
 			this.reason = this.cancelList[e.detail.value].name;
 			// console.log(this.reason);
@@ -231,14 +227,14 @@ export default {
 		// 首次获取订单列表
 		loadData(index) {
 			this.params.pageNumber = this.navList[index].pageNumber;
-			// console.log(index);
+			console.log(index);
 			// console.log(this.params);
 			getOrderList(this.params).then((res) => {
 				uni.stopPullDownRefresh();
-				// console.log(res);
+				console.log(res);
 				if (res.status == 200) {
 					let orderList = res.data;
-					console.log(orderList);
+					// console.log(orderList);
 					// 判断是否有更多数据(如果数据小于4条，就没有更多数据了)
 					if (orderList.length == 0) {
 						this.navList[index].loadStatus = "noMore";

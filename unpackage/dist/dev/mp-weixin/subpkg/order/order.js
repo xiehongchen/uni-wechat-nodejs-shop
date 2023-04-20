@@ -101,16 +101,16 @@ var components
 try {
   components = {
     uEmpty: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-empty/u-empty */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-empty/u-empty")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-empty/u-empty.vue */ 329))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-empty/u-empty */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-empty/u-empty")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-empty/u-empty.vue */ 350))
     },
     myGoodsOrder: function () {
-      return __webpack_require__.e(/*! import() | components/my-goods-order/my-goods-order */ "components/my-goods-order/my-goods-order").then(__webpack_require__.bind(null, /*! @/components/my-goods-order/my-goods-order.vue */ 439))
+      return __webpack_require__.e(/*! import() | components/my-goods-order/my-goods-order */ "components/my-goods-order/my-goods-order").then(__webpack_require__.bind(null, /*! @/components/my-goods-order/my-goods-order.vue */ 460))
     },
     uniPopup: function () {
-      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-popup/uni-popup */ "node-modules/@dcloudio/uni-ui/lib/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-popup/uni-popup.vue */ 446))
+      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-popup/uni-popup */ "node-modules/@dcloudio/uni-ui/lib/uni-popup/uni-popup").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-popup/uni-popup.vue */ 467))
     },
     uButton: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-button/u-button.vue */ 453))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-button/u-button */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-button/u-button")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-button/u-button.vue */ 474))
     },
   }
 } catch (e) {
@@ -347,11 +347,8 @@ var _default = {
     };
   },
   onLoad: function onLoad(options) {
-    console.log(options);
-    var num = options.status;
-    if (num) {
-      this.currentIndex = num;
-    }
+    // console.log(options);
+    this.currentIndex = options.status;
   },
   onShow: function onShow() {
     // 初始化数据
@@ -374,7 +371,7 @@ var _default = {
   },
   methods: {
     change: function change(e) {
-      // console.log(e.detail.value);
+      // console.log("change");
       // console.log(this.cancelList[e.detail.value].name);
       this.reason = this.cancelList[e.detail.value].name;
       // console.log(this.reason);
@@ -400,14 +397,14 @@ var _default = {
     loadData: function loadData(index) {
       var _this = this;
       this.params.pageNumber = this.navList[index].pageNumber;
-      // console.log(index);
+      console.log(index);
       // console.log(this.params);
       (0, _order.getOrderList)(this.params).then(function (res) {
         uni.stopPullDownRefresh();
-        // console.log(res);
+        console.log(res);
         if (res.status == 200) {
           var orderList = res.data;
-          console.log(orderList);
+          // console.log(orderList);
           // 判断是否有更多数据(如果数据小于4条，就没有更多数据了)
           if (orderList.length == 0) {
             _this.navList[index].loadStatus = "noMore";

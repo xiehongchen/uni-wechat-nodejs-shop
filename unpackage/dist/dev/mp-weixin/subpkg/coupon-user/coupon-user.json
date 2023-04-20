@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "my-coupon-list": "/components/my-coupon-list/my-coupon-list",
+    "u-empty": "/uni_modules/uview-ui/components/u-empty/u-empty"
+  }
+}

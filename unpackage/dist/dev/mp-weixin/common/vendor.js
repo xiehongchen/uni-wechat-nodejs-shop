@@ -21220,7 +21220,7 @@ exports.getOrderList = getOrderList;
 exports.payCart = payCart;
 var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 170));
 // 提交订单	地址id、支付金额、商品列表
-function createOrder(addressId, payment, goodsList) {
+function createOrder(addressId, payment, goodsList, couponid, lastPrice) {
   return _request.default.request({
     url: "/orders/create",
     method: 'post',
@@ -21230,7 +21230,9 @@ function createOrder(addressId, payment, goodsList) {
     data: {
       addressId: addressId,
       payment: payment,
-      goodsList: goodsList
+      goodsList: goodsList,
+      couponid: couponid,
+      lastPrice: lastPrice
     }
   });
 }
@@ -21401,13 +21403,106 @@ function deleteAddress(id) {
 /* 285 */,
 /* 286 */,
 /* 287 */,
-/* 288 */,
+/* 288 */
+/*!******************************************************************************************************************************!*\
+  !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/api/coupon.js ***!
+  \******************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ 4);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.addCoupon = addCoupon;
+exports.getCouponList = getCouponList;
+exports.getUserCouponList = getUserCouponList;
+exports.useUserCoupon = useUserCoupon;
+var _request = _interopRequireDefault(__webpack_require__(/*! @/config/request.js */ 170));
+// 获取优惠券列表
+function getCouponList() {
+  return _request.default.request({
+    url: "/coupon/list",
+    header: {
+      token: true
+    }
+  });
+}
+
+// 获取用户的优惠劵列表
+function getUserCouponList(params) {
+  console.log(params);
+  return _request.default.request({
+    url: "/coupon/u-list",
+    header: {
+      token: true
+    },
+    data: {
+      params: params
+    }
+  });
+}
+
+// 添加优惠券
+function addCoupon(couponId) {
+  return _request.default.request({
+    url: "/coupon/add",
+    method: "POST",
+    header: {
+      token: true
+    },
+    data: {
+      couponId: couponId
+    }
+  });
+}
+
+// 使用优惠券
+function useUserCoupon(id, message) {
+  return _request.default.request({
+    url: "/coupon/use",
+    method: "put",
+    header: {
+      token: true
+    },
+    data: {
+      id: id,
+      message: message
+    }
+  });
+}
+
+/***/ }),
 /* 289 */,
 /* 290 */,
 /* 291 */,
 /* 292 */,
 /* 293 */,
-/* 294 */
+/* 294 */,
+/* 295 */,
+/* 296 */,
+/* 297 */,
+/* 298 */,
+/* 299 */,
+/* 300 */,
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */,
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */
 /*!*********************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-icons/icons.js ***!
   \*********************************************************************************************************************************************************************/
@@ -22428,19 +22523,19 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 295 */,
-/* 296 */,
-/* 297 */,
-/* 298 */,
-/* 299 */,
-/* 300 */,
-/* 301 */,
-/* 302 */,
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */,
+/* 320 */,
+/* 321 */,
+/* 322 */,
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */,
+/* 328 */
 /*!*********************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/mpwxs.js ***!
   \*********************************************************************************************************************************************************************************/
@@ -22517,7 +22612,7 @@ var _default = mpMixins;
 exports.default = _default;
 
 /***/ }),
-/* 308 */
+/* 329 */
 /*!************************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/bindingx.js ***!
   \************************************************************************************************************************************************************************************/
@@ -22536,7 +22631,7 @@ var _default = bindIngXMixins;
 exports.default = _default;
 
 /***/ }),
-/* 309 */
+/* 330 */
 /*!***********************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/mpother.js ***!
   \***********************************************************************************************************************************************************************************/
@@ -22555,23 +22650,23 @@ var _default = otherMixins;
 exports.default = _default;
 
 /***/ }),
-/* 310 */,
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */,
-/* 316 */,
-/* 317 */,
-/* 318 */,
-/* 319 */,
-/* 320 */,
-/* 321 */,
-/* 322 */,
-/* 323 */,
-/* 324 */,
-/* 325 */,
-/* 326 */
+/* 331 */,
+/* 332 */,
+/* 333 */,
+/* 334 */,
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */,
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */
 /*!*****************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-modal/props.js ***!
   \*****************************************************************************************************************************************************************/
@@ -22673,14 +22768,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 327 */,
-/* 328 */,
-/* 329 */,
-/* 330 */,
-/* 331 */,
-/* 332 */,
-/* 333 */,
-/* 334 */
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */
 /*!*****************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-empty/props.js ***!
   \*****************************************************************************************************************************************************************/
@@ -22757,14 +22852,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 335 */,
-/* 336 */,
-/* 337 */,
-/* 338 */,
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */
 /*!****************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-icon/icons.js ***!
   \****************************************************************************************************************************************************************/
@@ -22995,7 +23090,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 343 */
+/* 364 */
 /*!****************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-icon/props.js ***!
   \****************************************************************************************************************************************************************/
@@ -23102,21 +23197,21 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 344 */,
-/* 345 */,
-/* 346 */,
-/* 347 */,
-/* 348 */,
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */,
-/* 356 */,
-/* 357 */,
-/* 358 */
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */,
+/* 370 */,
+/* 371 */,
+/* 372 */,
+/* 373 */,
+/* 374 */,
+/* 375 */,
+/* 376 */,
+/* 377 */,
+/* 378 */,
+/* 379 */
 /*!******************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/index.js ***!
   \******************************************************************************************************************************************************************************/
@@ -23131,9 +23226,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 359));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 360));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 361));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 380));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 381));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 382));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -23142,7 +23237,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 359 */
+/* 380 */
 /*!*****************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/en.json ***!
   \*****************************************************************************************************************************************************************************/
@@ -23152,7 +23247,7 @@ exports.default = _default;
 module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"shop\",\"uni-goods-nav.options.cart\":\"cart\",\"uni-goods-nav.buttonGroup.addToCart\":\"add to cart\",\"uni-goods-nav.buttonGroup.buyNow\":\"buy now\"}");
 
 /***/ }),
-/* 360 */
+/* 381 */
 /*!**********************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/zh-Hans.json ***!
   \**********************************************************************************************************************************************************************************/
@@ -23162,7 +23257,7 @@ module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"shop\",\"uni-good
 module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"店铺\",\"uni-goods-nav.options.cart\":\"购物车\",\"uni-goods-nav.buttonGroup.addToCart\":\"加入购物车\",\"uni-goods-nav.buttonGroup.buyNow\":\"立即购买\"}");
 
 /***/ }),
-/* 361 */
+/* 382 */
 /*!**********************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-goods-nav/i18n/zh-Hant.json ***!
   \**********************************************************************************************************************************************************************************/
@@ -23172,21 +23267,21 @@ module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"店铺\",\"uni-go
 module.exports = JSON.parse("{\"uni-goods-nav.options.shop\":\"店鋪\",\"uni-goods-nav.options.cart\":\"購物車\",\"uni-goods-nav.buttonGroup.addToCart\":\"加入購物車\",\"uni-goods-nav.buttonGroup.buyNow\":\"立即購買\"}");
 
 /***/ }),
-/* 362 */,
-/* 363 */,
-/* 364 */,
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
-/* 371 */,
-/* 372 */,
-/* 373 */,
-/* 374 */,
-/* 375 */,
-/* 376 */
+/* 383 */,
+/* 384 */,
+/* 385 */,
+/* 386 */,
+/* 387 */,
+/* 388 */,
+/* 389 */,
+/* 390 */,
+/* 391 */,
+/* 392 */,
+/* 393 */,
+/* 394 */,
+/* 395 */,
+/* 396 */,
+/* 397 */
 /*!*******************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/index.js ***!
   \*******************************************************************************************************************************************************************************/
@@ -23201,9 +23296,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 377));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 378));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 379));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 398));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 399));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 400));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -23212,7 +23307,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 377 */
+/* 398 */
 /*!******************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/en.json ***!
   \******************************************************************************************************************************************************************************/
@@ -23222,7 +23317,7 @@ exports.default = _default;
 module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"Search enter content\"}");
 
 /***/ }),
-/* 378 */
+/* 399 */
 /*!***********************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/zh-Hans.json ***!
   \***********************************************************************************************************************************************************************************/
@@ -23232,7 +23327,7 @@ module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-
 module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"请输入搜索内容\"}");
 
 /***/ }),
-/* 379 */
+/* 400 */
 /*!***********************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-search-bar/i18n/zh-Hant.json ***!
   \***********************************************************************************************************************************************************************************/
@@ -23242,21 +23337,21 @@ module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-
 module.exports = JSON.parse("{\"uni-search-bar.cancel\":\"cancel\",\"uni-search-bar.placeholder\":\"請輸入搜索內容\"}");
 
 /***/ }),
-/* 380 */,
-/* 381 */,
-/* 382 */,
-/* 383 */,
-/* 384 */,
-/* 385 */,
-/* 386 */,
-/* 387 */,
-/* 388 */,
-/* 389 */,
-/* 390 */,
-/* 391 */,
-/* 392 */,
-/* 393 */,
-/* 394 */
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */
 /*!************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-forms/validate.js ***!
   \************************************************************************************************************************************************************************/
@@ -23272,9 +23367,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 59));
-var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 395));
-var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 396));
-var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 398));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 416));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 417));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 419));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 61));
 var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
 var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
@@ -23947,7 +24042,7 @@ var _default = SchemaValidator;
 exports.default = _default;
 
 /***/ }),
-/* 395 */
+/* 416 */
 /*!*********************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/inherits.js ***!
   \*********************************************************/
@@ -23974,7 +24069,7 @@ function _inherits(subClass, superClass) {
 module.exports = _inherits, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 396 */
+/* 417 */
 /*!**************************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js ***!
   \**************************************************************************/
@@ -23982,7 +24077,7 @@ module.exports = _inherits, module.exports.__esModule = true, module.exports["de
 /***/ (function(module, exports, __webpack_require__) {
 
 var _typeof = __webpack_require__(/*! ./typeof.js */ 13)["default"];
-var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized.js */ 397);
+var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized.js */ 418);
 function _possibleConstructorReturn(self, call) {
   if (call && (_typeof(call) === "object" || typeof call === "function")) {
     return call;
@@ -23994,7 +24089,7 @@ function _possibleConstructorReturn(self, call) {
 module.exports = _possibleConstructorReturn, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 397 */
+/* 418 */
 /*!**********************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/assertThisInitialized.js ***!
   \**********************************************************************/
@@ -24010,7 +24105,7 @@ function _assertThisInitialized(self) {
 module.exports = _assertThisInitialized, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 398 */
+/* 419 */
 /*!***************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/getPrototypeOf.js ***!
   \***************************************************************/
@@ -24026,7 +24121,7 @@ function _getPrototypeOf(o) {
 module.exports = _getPrototypeOf, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 399 */
+/* 420 */
 /*!*********************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-forms/utils.js ***!
   \*********************************************************************************************************************************************************************/
@@ -24361,28 +24456,28 @@ var isEqual = function isEqual(a, b) {
 exports.isEqual = isEqual;
 
 /***/ }),
-/* 400 */,
-/* 401 */,
-/* 402 */,
-/* 403 */,
-/* 404 */,
-/* 405 */,
-/* 406 */,
-/* 407 */,
-/* 408 */,
-/* 409 */,
-/* 410 */,
-/* 411 */,
-/* 412 */,
-/* 413 */,
-/* 414 */,
-/* 415 */,
-/* 416 */,
-/* 417 */,
-/* 418 */,
-/* 419 */,
-/* 420 */,
-/* 421 */
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */
 /*!************************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/uni-cloud/dist/index.js ***!
   \************************************************************************************/
@@ -24403,14 +24498,14 @@ var _typeof2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/hel
 var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ 18));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 61));
 var _defineProperty2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/defineProperty */ 11));
-var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 395));
-var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 396));
-var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 398));
-var _wrapNativeSuper2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ 422));
+var _inherits2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/inherits */ 416));
+var _possibleConstructorReturn2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ 417));
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ 419));
+var _wrapNativeSuper2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ 443));
 var _classCallCheck2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ 23));
 var _createClass2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/createClass */ 24));
 var _uniI18n = __webpack_require__(/*! @dcloudio/uni-i18n */ 22);
-var _pages = _interopRequireDefault(__webpack_require__(/*! @/pages.json */ 424));
+var _pages = _interopRequireDefault(__webpack_require__(/*! @/pages.json */ 445));
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e33) { throw _e33; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e34) { didErr = true; err = _e34; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
@@ -24863,7 +24958,7 @@ var k = "development" === "development",
   O = true;
 var x = "";
 try {
-  x = (__webpack_require__(/*! uni-stat-config */ 425).default || __webpack_require__(/*! uni-stat-config */ 425)).appid;
+  x = (__webpack_require__(/*! uni-stat-config */ 446).default || __webpack_require__(/*! uni-stat-config */ 446)).appid;
 } catch (e) {}
 var R = {};
 function U(e) {
@@ -31504,16 +31599,16 @@ exports.default = Us;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../webpack/buildin/global.js */ 3), __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"], __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/wx.js */ 1)["default"]))
 
 /***/ }),
-/* 422 */
+/* 443 */
 /*!****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/wrapNativeSuper.js ***!
   \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var getPrototypeOf = __webpack_require__(/*! ./getPrototypeOf.js */ 398);
+var getPrototypeOf = __webpack_require__(/*! ./getPrototypeOf.js */ 419);
 var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf.js */ 16);
-var isNativeFunction = __webpack_require__(/*! ./isNativeFunction.js */ 423);
+var isNativeFunction = __webpack_require__(/*! ./isNativeFunction.js */ 444);
 var construct = __webpack_require__(/*! ./construct.js */ 15);
 function _wrapNativeSuper(Class) {
   var _cache = typeof Map === "function" ? new Map() : undefined;
@@ -31544,7 +31639,7 @@ function _wrapNativeSuper(Class) {
 module.exports = _wrapNativeSuper, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 423 */
+/* 444 */
 /*!*****************************************************************!*\
   !*** ./node_modules/@babel/runtime/helpers/isNativeFunction.js ***!
   \*****************************************************************/
@@ -31557,7 +31652,7 @@ function _isNativeFunction(fn) {
 module.exports = _isNativeFunction, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
 /***/ }),
-/* 424 */
+/* 445 */
 /*!********************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/pages.json?{"type":"origin-pages-json"} ***!
   \********************************************************************************************************************************************************/
@@ -31667,6 +31762,24 @@ var _default = {
         "navigationBarTitleText": "",
         "enablePullDownRefresh": false
       }
+    }, {
+      "path": "coupon/coupon",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+    }, {
+      "path": "coupon-list/coupon-list",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
+    }, {
+      "path": "coupon-user/coupon-user",
+      "style": {
+        "navigationBarTitleText": "",
+        "enablePullDownRefresh": false
+      }
     }]
   }],
   "globalStyle": {
@@ -31706,7 +31819,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 425 */
+/* 446 */
 /*!*******************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/pages.json?{"type":"stat"} ***!
   \*******************************************************************************************************************************************/
@@ -31726,14 +31839,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 426 */,
-/* 427 */,
-/* 428 */,
-/* 429 */,
-/* 430 */,
-/* 431 */,
-/* 432 */,
-/* 433 */
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */
 /*!************************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/index.js ***!
   \************************************************************************************************************************************************************************************/
@@ -31748,9 +31861,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 434));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 435));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 436));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 455));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 456));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 457));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -31759,7 +31872,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 434 */
+/* 455 */
 /*!***********************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/en.json ***!
   \***********************************************************************************************************************************************************************************/
@@ -31769,7 +31882,7 @@ exports.default = _default;
 module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"select date\",\"uni-datetime-picker.selectTime\":\"select time\",\"uni-datetime-picker.selectDateTime\":\"select datetime\",\"uni-datetime-picker.startDate\":\"start date\",\"uni-datetime-picker.endDate\":\"end date\",\"uni-datetime-picker.startTime\":\"start time\",\"uni-datetime-picker.endTime\":\"end time\",\"uni-datetime-picker.ok\":\"ok\",\"uni-datetime-picker.clear\":\"clear\",\"uni-datetime-picker.cancel\":\"cancel\",\"uni-datetime-picker.year\":\"-\",\"uni-datetime-picker.month\":\"\",\"uni-calender.MON\":\"MON\",\"uni-calender.TUE\":\"TUE\",\"uni-calender.WED\":\"WED\",\"uni-calender.THU\":\"THU\",\"uni-calender.FRI\":\"FRI\",\"uni-calender.SAT\":\"SAT\",\"uni-calender.SUN\":\"SUN\",\"uni-calender.confirm\":\"confirm\"}");
 
 /***/ }),
-/* 435 */
+/* 456 */
 /*!****************************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/zh-Hans.json ***!
   \****************************************************************************************************************************************************************************************/
@@ -31779,7 +31892,7 @@ module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"select date\"
 module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"选择日期\",\"uni-datetime-picker.selectTime\":\"选择时间\",\"uni-datetime-picker.selectDateTime\":\"选择日期时间\",\"uni-datetime-picker.startDate\":\"开始日期\",\"uni-datetime-picker.endDate\":\"结束日期\",\"uni-datetime-picker.startTime\":\"开始时间\",\"uni-datetime-picker.endTime\":\"结束时间\",\"uni-datetime-picker.ok\":\"确定\",\"uni-datetime-picker.clear\":\"清除\",\"uni-datetime-picker.cancel\":\"取消\",\"uni-datetime-picker.year\":\"年\",\"uni-datetime-picker.month\":\"月\",\"uni-calender.SUN\":\"日\",\"uni-calender.MON\":\"一\",\"uni-calender.TUE\":\"二\",\"uni-calender.WED\":\"三\",\"uni-calender.THU\":\"四\",\"uni-calender.FRI\":\"五\",\"uni-calender.SAT\":\"六\",\"uni-calender.confirm\":\"确认\"}");
 
 /***/ }),
-/* 436 */
+/* 457 */
 /*!****************************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/i18n/zh-Hant.json ***!
   \****************************************************************************************************************************************************************************************/
@@ -31789,28 +31902,28 @@ module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"选择日期\
 module.exports = JSON.parse("{\"uni-datetime-picker.selectDate\":\"選擇日期\",\"uni-datetime-picker.selectTime\":\"選擇時間\",\"uni-datetime-picker.selectDateTime\":\"選擇日期時間\",\"uni-datetime-picker.startDate\":\"開始日期\",\"uni-datetime-picker.endDate\":\"結束日期\",\"uni-datetime-picker.startTime\":\"開始时间\",\"uni-datetime-picker.endTime\":\"結束时间\",\"uni-datetime-picker.ok\":\"確定\",\"uni-datetime-picker.clear\":\"清除\",\"uni-datetime-picker.cancel\":\"取消\",\"uni-datetime-picker.year\":\"年\",\"uni-datetime-picker.month\":\"月\",\"uni-calender.SUN\":\"日\",\"uni-calender.MON\":\"一\",\"uni-calender.TUE\":\"二\",\"uni-calender.WED\":\"三\",\"uni-calender.THU\":\"四\",\"uni-calender.FRI\":\"五\",\"uni-calender.SAT\":\"六\",\"uni-calender.confirm\":\"確認\"}");
 
 /***/ }),
-/* 437 */,
-/* 438 */,
-/* 439 */,
-/* 440 */,
-/* 441 */,
-/* 442 */,
-/* 443 */,
-/* 444 */,
-/* 445 */,
-/* 446 */,
-/* 447 */,
-/* 448 */,
-/* 449 */,
-/* 450 */,
-/* 451 */,
-/* 452 */,
-/* 453 */,
-/* 454 */,
-/* 455 */,
-/* 456 */,
-/* 457 */,
-/* 458 */
+/* 458 */,
+/* 459 */,
+/* 460 */,
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */,
+/* 467 */,
+/* 468 */,
+/* 469 */,
+/* 470 */,
+/* 471 */,
+/* 472 */,
+/* 473 */,
+/* 474 */,
+/* 475 */,
+/* 476 */,
+/* 477 */,
+/* 478 */,
+/* 479 */
 /*!**********************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/mixin/button.js ***!
   \**********************************************************************************************************************************************************/
@@ -31840,7 +31953,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 459 */
+/* 480 */
 /*!************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/libs/mixin/openType.js ***!
   \************************************************************************************************************************************************************/
@@ -31882,7 +31995,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 460 */
+/* 481 */
 /*!******************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-button/props.js ***!
   \******************************************************************************************************************************************************************/
@@ -32061,27 +32174,6 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 461 */,
-/* 462 */,
-/* 463 */,
-/* 464 */,
-/* 465 */,
-/* 466 */,
-/* 467 */,
-/* 468 */,
-/* 469 */,
-/* 470 */,
-/* 471 */,
-/* 472 */,
-/* 473 */,
-/* 474 */,
-/* 475 */,
-/* 476 */,
-/* 477 */,
-/* 478 */,
-/* 479 */,
-/* 480 */,
-/* 481 */,
 /* 482 */,
 /* 483 */,
 /* 484 */,
@@ -32089,7 +32181,28 @@ exports.default = _default;
 /* 486 */,
 /* 487 */,
 /* 488 */,
-/* 489 */
+/* 489 */,
+/* 490 */,
+/* 491 */,
+/* 492 */,
+/* 493 */,
+/* 494 */,
+/* 495 */,
+/* 496 */,
+/* 497 */,
+/* 498 */,
+/* 499 */,
+/* 500 */,
+/* 501 */,
+/* 502 */,
+/* 503 */,
+/* 504 */,
+/* 505 */,
+/* 506 */,
+/* 507 */,
+/* 508 */,
+/* 509 */,
+/* 510 */
 /*!******************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-switch/props.js ***!
   \******************************************************************************************************************************************************************/
@@ -32161,21 +32274,113 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 490 */,
-/* 491 */,
-/* 492 */,
-/* 493 */,
-/* 494 */,
-/* 495 */,
-/* 496 */,
-/* 497 */,
-/* 498 */,
-/* 499 */,
-/* 500 */,
-/* 501 */,
-/* 502 */,
-/* 503 */,
-/* 504 */
+/* 511 */,
+/* 512 */,
+/* 513 */,
+/* 514 */,
+/* 515 */,
+/* 516 */,
+/* 517 */,
+/* 518 */,
+/* 519 */,
+/* 520 */,
+/* 521 */,
+/* 522 */,
+/* 523 */,
+/* 524 */,
+/* 525 */,
+/* 526 */,
+/* 527 */,
+/* 528 */,
+/* 529 */,
+/* 530 */,
+/* 531 */,
+/* 532 */,
+/* 533 */,
+/* 534 */,
+/* 535 */,
+/* 536 */,
+/* 537 */,
+/* 538 */,
+/* 539 */,
+/* 540 */,
+/* 541 */,
+/* 542 */,
+/* 543 */,
+/* 544 */,
+/* 545 */,
+/* 546 */,
+/* 547 */,
+/* 548 */,
+/* 549 */,
+/* 550 */,
+/* 551 */,
+/* 552 */,
+/* 553 */,
+/* 554 */,
+/* 555 */,
+/* 556 */,
+/* 557 */,
+/* 558 */,
+/* 559 */,
+/* 560 */,
+/* 561 */,
+/* 562 */,
+/* 563 */,
+/* 564 */,
+/* 565 */,
+/* 566 */,
+/* 567 */,
+/* 568 */,
+/* 569 */,
+/* 570 */,
+/* 571 */,
+/* 572 */,
+/* 573 */,
+/* 574 */,
+/* 575 */,
+/* 576 */,
+/* 577 */,
+/* 578 */,
+/* 579 */,
+/* 580 */,
+/* 581 */,
+/* 582 */,
+/* 583 */,
+/* 584 */,
+/* 585 */,
+/* 586 */,
+/* 587 */,
+/* 588 */,
+/* 589 */,
+/* 590 */,
+/* 591 */,
+/* 592 */,
+/* 593 */,
+/* 594 */,
+/* 595 */,
+/* 596 */,
+/* 597 */,
+/* 598 */,
+/* 599 */,
+/* 600 */,
+/* 601 */,
+/* 602 */,
+/* 603 */,
+/* 604 */,
+/* 605 */,
+/* 606 */,
+/* 607 */,
+/* 608 */,
+/* 609 */,
+/* 610 */,
+/* 611 */,
+/* 612 */,
+/* 613 */,
+/* 614 */,
+/* 615 */,
+/* 616 */,
+/* 617 */
 /*!*****************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-popup/props.js ***!
   \*****************************************************************************************************************************************************************/
@@ -32272,14 +32477,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 505 */,
-/* 506 */,
-/* 507 */,
-/* 508 */,
-/* 509 */,
-/* 510 */,
-/* 511 */,
-/* 512 */
+/* 618 */,
+/* 619 */,
+/* 620 */,
+/* 621 */,
+/* 622 */,
+/* 623 */,
+/* 624 */,
+/* 625 */
 /*!****************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-line/props.js ***!
   \****************************************************************************************************************************************************************/
@@ -32330,14 +32535,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 513 */,
-/* 514 */,
-/* 515 */,
-/* 516 */,
-/* 517 */,
-/* 518 */,
-/* 519 */,
-/* 520 */
+/* 626 */,
+/* 627 */,
+/* 628 */,
+/* 629 */,
+/* 630 */,
+/* 631 */,
+/* 632 */,
+/* 633 */
 /*!************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-loading-icon/props.js ***!
   \************************************************************************************************************************************************************************/
@@ -32414,14 +32619,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 521 */,
-/* 522 */,
-/* 523 */,
-/* 524 */,
-/* 525 */,
-/* 526 */,
-/* 527 */,
-/* 528 */
+/* 634 */,
+/* 635 */,
+/* 636 */,
+/* 637 */,
+/* 638 */,
+/* 639 */,
+/* 640 */,
+/* 641 */
 /*!******************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/index.js ***!
   \******************************************************************************************************************************************************************************/
@@ -32436,9 +32641,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 529));
-var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 530));
-var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 531));
+var _en = _interopRequireDefault(__webpack_require__(/*! ./en.json */ 642));
+var _zhHans = _interopRequireDefault(__webpack_require__(/*! ./zh-Hans.json */ 643));
+var _zhHant = _interopRequireDefault(__webpack_require__(/*! ./zh-Hant.json */ 644));
 var _default = {
   en: _en.default,
   'zh-Hans': _zhHans.default,
@@ -32447,7 +32652,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 529 */
+/* 642 */
 /*!*****************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/en.json ***!
   \*****************************************************************************************************************************************************************************/
@@ -32457,7 +32662,7 @@ exports.default = _default;
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show more\",\"uni-load-more.contentrefresh\":\"loading...\",\"uni-load-more.contentnomore\":\"No more data\"}");
 
 /***/ }),
-/* 530 */
+/* 643 */
 /*!**********************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hans.json ***!
   \**********************************************************************************************************************************************************************************/
@@ -32467,7 +32672,7 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"Pull up to show mo
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多\",\"uni-load-more.contentrefresh\":\"正在加载...\",\"uni-load-more.contentnomore\":\"没有更多数据了\"}");
 
 /***/ }),
-/* 531 */
+/* 644 */
 /*!**********************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-load-more/i18n/zh-Hant.json ***!
   \**********************************************************************************************************************************************************************************/
@@ -32477,14 +32682,14 @@ module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉显示更多
 module.exports = JSON.parse("{\"uni-load-more.contentdown\":\"上拉顯示更多\",\"uni-load-more.contentrefresh\":\"正在加載...\",\"uni-load-more.contentnomore\":\"沒有更多數據了\"}");
 
 /***/ }),
-/* 532 */,
-/* 533 */,
-/* 534 */,
-/* 535 */,
-/* 536 */,
-/* 537 */,
-/* 538 */,
-/* 539 */
+/* 645 */,
+/* 646 */,
+/* 647 */,
+/* 648 */,
+/* 649 */,
+/* 650 */,
+/* 651 */,
+/* 652 */
 /*!******************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-datetime-picker/util.js ***!
   \******************************************************************************************************************************************************************************/
@@ -32953,21 +33158,21 @@ var _default = Calendar;
 exports.default = _default;
 
 /***/ }),
-/* 540 */,
-/* 541 */,
-/* 542 */,
-/* 543 */,
-/* 544 */,
-/* 545 */,
-/* 546 */,
-/* 547 */,
-/* 548 */,
-/* 549 */,
-/* 550 */,
-/* 551 */,
-/* 552 */,
-/* 553 */,
-/* 554 */
+/* 653 */,
+/* 654 */,
+/* 655 */,
+/* 656 */,
+/* 657 */,
+/* 658 */,
+/* 659 */,
+/* 660 */,
+/* 661 */,
+/* 662 */,
+/* 663 */,
+/* 664 */,
+/* 665 */,
+/* 666 */,
+/* 667 */
 /*!************************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/node_modules/@dcloudio/uni-ui/lib/uni-transition/createAnimation.js ***!
   \************************************************************************************************************************************************************************************/
@@ -33101,12 +33306,12 @@ function createAnimation(option, _this) {
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 555 */,
-/* 556 */,
-/* 557 */,
-/* 558 */,
-/* 559 */,
-/* 560 */
+/* 668 */,
+/* 669 */,
+/* 670 */,
+/* 671 */,
+/* 672 */,
+/* 673 */
 /*!*******************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-overlay/props.js ***!
   \*******************************************************************************************************************************************************************/
@@ -33148,14 +33353,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 561 */,
-/* 562 */,
-/* 563 */,
-/* 564 */,
-/* 565 */,
-/* 566 */,
-/* 567 */,
-/* 568 */
+/* 674 */,
+/* 675 */,
+/* 676 */,
+/* 677 */,
+/* 678 */,
+/* 679 */,
+/* 680 */,
+/* 681 */
 /*!**********************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-transition/props.js ***!
   \**********************************************************************************************************************************************************************/
@@ -33197,7 +33402,7 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 569 */
+/* 682 */
 /*!***************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-transition/transition.js ***!
   \***************************************************************************************************************************************************************************/
@@ -33214,7 +33419,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _regenerator = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/regenerator */ 59));
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ 61));
-var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 570));
+var _nvueAniMap = _interopRequireDefault(__webpack_require__(/*! ./nvue.ani-map.js */ 683));
 // 定义一个一定时间后自动成功的promise，让调用nextTick方法处，进入下一个then方法
 var nextTick = function nextTick() {
   return new Promise(function (resolve) {
@@ -33306,7 +33511,7 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 570 */
+/* 683 */
 /*!*****************************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-transition/nvue.ani-map.js ***!
   \*****************************************************************************************************************************************************************************/
@@ -33499,14 +33704,14 @@ var _default = {
 exports.default = _default;
 
 /***/ }),
-/* 571 */,
-/* 572 */,
-/* 573 */,
-/* 574 */,
-/* 575 */,
-/* 576 */,
-/* 577 */,
-/* 578 */
+/* 684 */,
+/* 685 */,
+/* 686 */,
+/* 687 */,
+/* 688 */,
+/* 689 */,
+/* 690 */,
+/* 691 */
 /*!**********************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-status-bar/props.js ***!
   \**********************************************************************************************************************************************************************/
@@ -33532,14 +33737,14 @@ exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 2)["default"]))
 
 /***/ }),
-/* 579 */,
-/* 580 */,
-/* 581 */,
-/* 582 */,
-/* 583 */,
-/* 584 */,
-/* 585 */,
-/* 586 */
+/* 692 */,
+/* 693 */,
+/* 694 */,
+/* 695 */,
+/* 696 */,
+/* 697 */,
+/* 698 */,
+/* 699 */
 /*!***********************************************************************************************************************************************************************!*\
   !*** C:/Users/谢红尘/AppData/Roaming/Microsoft/Windows/Printer Shortcuts/HBuilderProjects/uni-wechat-nodejs-shop/uni_modules/uview-ui/components/u-safe-bottom/props.js ***!
   \***********************************************************************************************************************************************************************/

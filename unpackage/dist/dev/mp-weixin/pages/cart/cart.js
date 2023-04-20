@@ -101,22 +101,22 @@ var components
 try {
   components = {
     uniIcons: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-icons/uni-icons.vue */ 289))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-icons/uni-icons.vue */ 310))
     },
     uniSwipeAction: function () {
-      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action */ "node-modules/@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action.vue */ 297))
+      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action */ "node-modules/@dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-swipe-action/uni-swipe-action.vue */ 318))
     },
     uniSwipeActionItem: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item.vue */ 302))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-swipe-action-item/uni-swipe-action-item.vue */ 323))
     },
     myGoodsCart: function () {
-      return __webpack_require__.e(/*! import() | components/my-goods-cart/my-goods-cart */ "components/my-goods-cart/my-goods-cart").then(__webpack_require__.bind(null, /*! @/components/my-goods-cart/my-goods-cart.vue */ 314))
+      return __webpack_require__.e(/*! import() | components/my-goods-cart/my-goods-cart */ "components/my-goods-cart/my-goods-cart").then(__webpack_require__.bind(null, /*! @/components/my-goods-cart/my-goods-cart.vue */ 335))
     },
     uModal: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-modal/u-modal */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-modal/u-modal")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-modal/u-modal.vue */ 321))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-modal/u-modal */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-modal/u-modal")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-modal/u-modal.vue */ 342))
     },
     uEmpty: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-empty/u-empty */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-empty/u-empty")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-empty/u-empty.vue */ 329))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-empty/u-empty */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-empty/u-empty")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-empty/u-empty.vue */ 350))
     },
   }
 } catch (e) {
@@ -264,7 +264,7 @@ var _default = {
       // console.log("已勾选的商品");
       // console.log(this.payList);
       uni.navigateTo({
-        url: '/subpkg/settlement/settlement?data=' + JSON.stringify(this.payList) // 替换成实际的目标页面路径
+        url: '/subpkg/settlement/settlement?goods=' + JSON.stringify(this.payList) // 替换成实际的目标页面路径
       });
     },
     radioChangeHandler: function radioChangeHandler(e) {

@@ -92,10 +92,10 @@ export default {
 		onCancel(item) {
 			this.$emit("onCancel", item)
 		},
-		orderDetail(item){
+		orderDetail(item) {
 			console.log("点击跳转到订单详情");
 		},
-		againPay(item){
+		againPay(item) {
 			this.$emit("againPay", item)
 		}
 

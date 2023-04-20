@@ -101,10 +101,10 @@ var components
 try {
   components = {
     uniIcons: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-icons/uni-icons.vue */ 289))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-icons/uni-icons.vue */ 310))
     },
     uniGoodsNav: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-goods-nav/uni-goods-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-goods-nav/uni-goods-nav")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-goods-nav/uni-goods-nav.vue */ 353))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-goods-nav/uni-goods-nav */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-goods-nav/uni-goods-nav")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-goods-nav/uni-goods-nav.vue */ 374))
     },
   }
 } catch (e) {

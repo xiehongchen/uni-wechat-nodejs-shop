@@ -44,8 +44,26 @@
           "query": "",
           "launchMode": "default",
           "scene": null
+        },
+        {
+          "name": "优惠卷",
+          "pathName": "subpkg/coupon/coupon",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "支付",
+          "pathName": "subpkg/settlement/settlement",
+          "query": "data=%5B%7B%22goods_id%22%3A5%2C%22goods_name%22%3A%22%E8%8D%A3%E8%80%80Play4T%20Pro%22%2C%22goods_price%22%3A%221699.00%22%2C%22goods_count%22%3A1%2C%22img_md%22%3A%22http%3A%2F%2Flocalhost%3A3000%2Fimages%2Fgoods%2F5.jpg%22%2C%22goods_state%22%3Atrue%7D%5D",
+          "launchMode": "default",
+          "scene": null
         }
       ]
     }
+  },
+  "projectname": "uni-wechat-shop",
+  "setting": {
+    "compileHotReLoad": true
   }
 }

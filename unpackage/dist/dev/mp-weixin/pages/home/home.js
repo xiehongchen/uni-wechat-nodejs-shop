@@ -101,7 +101,7 @@ var components
 try {
   components = {
     mySearch: function () {
-      return __webpack_require__.e(/*! import() | components/my-search/my-search */ "components/my-search/my-search").then(__webpack_require__.bind(null, /*! @/components/my-search/my-search.vue */ 282))
+      return __webpack_require__.e(/*! import() | components/my-search/my-search */ "components/my-search/my-search").then(__webpack_require__.bind(null, /*! @/components/my-search/my-search.vue */ 303))
     },
   }
 } catch (e) {
@@ -298,9 +298,9 @@ var _default = {
               case 2:
                 res = _context2.sent;
                 _this2.navList = res.message;
-                // console.log("首页分类导航");
-                // console.log(this.navList);
-              case 4:
+                console.log("首页分类导航");
+                console.log(_this2.navList);
+              case 6:
               case "end":
                 return _context2.stop();
             }
@@ -314,6 +314,18 @@ var _default = {
       if (item.name === '分类') {
         uni.switchTab({
           url: '/pages/cate/cate'
+        });
+      } else if (item.name === '每日优惠') {
+        uni.navigateTo({
+          url: '/subpkg/coupon-list/coupon-list'
+        });
+      } else if (item.name === '电子产品') {
+        uni.navigateTo({
+          url: '/subpkg/goods_list/goods_list?query=' + '电子产品'
+        });
+      } else {
+        uni.switchTab({
+          url: '/pages/my/my'
         });
       }
     },

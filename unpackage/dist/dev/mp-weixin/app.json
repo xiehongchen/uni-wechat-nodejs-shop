@@ -18,7 +18,10 @@
         "settlement/settlement",
         "address/address",
         "addressInfo/addressInfo",
-        "paySuccess/paySuccess"
+        "paySuccess/paySuccess",
+        "coupon/coupon",
+        "coupon-list/coupon-list",
+        "coupon-user/coupon-user"
       ]
     }
   ],

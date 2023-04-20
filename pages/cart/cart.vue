@@ -21,10 +21,8 @@
 						<my-goods-cart :goods="goods" @radio-change="radioChangeHandler"
 							@num-change="numberChangeHandler" @longpress="longpress(goods)"></my-goods-cart>
 					</view>
-
 				</uni-swipe-action-item>
 			</block>
-
 		</uni-swipe-action>
 
 		<u-modal :show="deleteShow" :title="title" @confirm="delectConfirm" @cancel="closeConfirm" show-cancel-button
@@ -153,7 +151,7 @@
 				// console.log("已勾选的商品");
 				// console.log(this.payList);
 				uni.navigateTo({
-					url: '/subpkg/settlement/settlement?data=' + JSON.stringify(this.payList) // 替换成实际的目标页面路径
+					url: '/subpkg/settlement/settlement?goods=' + JSON.stringify(this.payList) // 替换成实际的目标页面路径
 				});
 			},
 			radioChangeHandler(e) {

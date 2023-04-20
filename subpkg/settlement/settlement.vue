@@ -5,6 +5,22 @@
 			<my-goods-settle :goods="item" @num-change="numberChangeHandler"></my-goods-settle>
 		</view>
 
+		<view class="coupon-box">
+			<view class="coupon" @click="useCoupon">
+				<text class="text">
+					优惠劵
+				</text>
+				<view v-if="!isUseCoupon">
+					<uni-icons type="forward" size="16"></uni-icons>
+				</view>
+				<view v-else class="price-text">
+					-￥{{ price }}
+				</view>
+
+			</view>
+
+		</view>
+
 		<view class="pay-box">
 			<radio-group @change="pay">
 				<view class="weixin">
@@ -24,7 +40,7 @@
 		<view class="my-settle-container">
 			<view class="amount-box">
 				<text class="text">共{{ checkedCount }}件</text>
-				合计:<text class="amount">￥{{ checkedGoodsAmount }}</text>
+				合计:<text class="amount">￥{{ goodsAndCoupon }}</text>
 			</view>
 			<!-- 结算按钮 -->
 			<view class="btn-settle" @click="submitOrder">提交订单</view>
@@ -51,10 +67,14 @@ import {
 export default {
 	data() {
 		return {
+			// 是否能够使用优惠劵
+			isUseCoupon: false,
 			// 付款信息
 			showPay: false,
 			// 商品信息
 			data: [],
+			// 优惠券
+			coupon: [],
 			// 支付状态
 			payStatus: '',
 			// 订单id
@@ -77,20 +97,48 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters('cart', ['checkedCount', 'checkedGoodsAmount'])
+		...mapGetters('cart', ['checkedCount', 'checkedGoodsAmount']),
+		goodsAndCoupon() {
+			// 判断是否使用优惠劵
+			if (this.coupon.couponId) {
+				// 判断是否满足使用条件
+				if (this.checkedGoodsAmount > this.coupon.consumeThreshold) {
+					// 折扣价格
+					if (this.coupon.couponType == 'DISCOUNT') {
+						let num = this.coupon.discount / 10
+						return (this.checkedGoodsAmount * num).toFixed(2)
+					} else {
+						return this.checkedGoodsAmount - this.coupon.price;
+					}
+				}
+			} else {
+				return this.checkedGoodsAmount
+			}
+		},
+		price() {
+			if (this.checkedGoodsAmount > this.coupon.consumeThreshold) {
+				// 满足使用条件
+				this.isUseCoupon = true
+				if (this.coupon.couponType == 'DISCOUNT') {
+					let num = 1 - this.coupon.discount / 10
+					return (this.checkedGoodsAmount * num).toFixed(2)
+				} else {
+					return this.coupon.price;
+				}
+			}
+		}
 	},
 	onLoad(options) {
 		// console.log("onLoad-----------");
 		// 获取商品 Id
-		console.log(options);
+		// console.log(options);
 		if (options.isOrder) {
 			this.isOrder = options.isOrder;
 			this.order_id = options.order_id;
-			console.log(this.isOrder);
-			console.log(this.order_id);
+			// console.log(this.isOrder);
+			// console.log(this.order_id);
 		}
-
-		this.data = JSON.parse(options.data);
+		this.data = JSON.parse(options.goods);
 		this.setAddress();
 		// this.address = JSON.parse(uni.getStorageSync('address'));
 		// this.data = JSON.parse(uni.getStorageSync('cart'))
@@ -99,11 +147,14 @@ export default {
 		// console.log(this.data);
 	},
 	onShow() {
-
+		// console.log(this.checkedGoodsAmount);
 		this.getAddress();
 		// this.address = JSON.parse(uni.getStorageSync('address'));
 		// console.log("onShow---------");
 		// console.log(this.address);
+		// this.coupon = JSON.parse(currPage.options);
+		console.log("优惠券信息");
+		console.log(this.coupon)
 	},
 	mounted() {
 		// console.log("mouted---------");
@@ -135,6 +186,9 @@ export default {
 			}
 			console.log(this.data);
 		},
+		setCoupon(newVal) {
+			this.coupon = newVal;
+		},
 		// 选择支付方式
 		pay(event) {
 			// console.log(event);
@@ -145,7 +199,7 @@ export default {
 			// 如果来自订单页面，直接支付
 			if (this.isOrder) {
 				this.showPay = true;
-			}else {
+			} else {
 				let addressId = this.address.id;
 				let payment = this.checkedGoodsAmount;
 				console.log(this.data);
@@ -161,9 +215,15 @@ export default {
 				// console.log(addressId);
 				// console.log(payment);
 				// console.log(goodsList);
-
+				let couponid;
+				let lastPrice;
+				if (this.coupon) {
+					couponid = this.coupon.id || null;
+					lastPrice = this.goodsAndCoupon;
+				}
+				console.log(couponid,lastPrice);
 				// 生成订单
-				createOrder(addressId, payment, this.goodsList).then((res) => {
+				createOrder(addressId, payment, this.goodsList,couponid,lastPrice).then((res) => {
 					console.log(res);
 					this.order_id = res.data.order_id;
 					console.log(this.order_id);
@@ -221,11 +281,33 @@ export default {
 			this.payStatus = 'BUYER_PAYMENT_SUCCESS';
 			this.pay();
 		},
+		useCoupon() {
+			uni.navigateTo({
+				url: '/subpkg/coupon-user/coupon-user'
+			})
+		}
 	}
 }
 </script>
 
 <style lang="scss">
+.coupon-box {
+	background-color: #fff;
+	border-radius: 10px;
+	margin: 10px 2px;
+	padding: 15px 10px;
+
+	.coupon {
+		display: flex;
+		justify-content: space-between;
+
+		.price-text {
+			font-size: 20px;
+			color: #ff0000;
+		}
+	}
+}
+
 .pay-box {
 	background-color: #fff;
 	border-radius: 10px;

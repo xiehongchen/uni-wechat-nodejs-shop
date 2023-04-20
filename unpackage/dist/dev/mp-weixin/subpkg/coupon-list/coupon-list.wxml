@@ -1,0 +1,1 @@
+<view><my-coupon-list vue-id="3d6f9180-1" coupon="{{couponList}}" message="{{source}}" data-event-opts="{{[['^getCoupon',[['getCoupon']]]]}}" bind:getCoupon="__e" bind:__l="__l"></my-coupon-list></view>

@@ -101,22 +101,22 @@ var components
 try {
   components = {
     uniForms: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-forms/uni-forms */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-forms/uni-forms")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-forms/uni-forms.vue */ 389))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-forms/uni-forms */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-forms/uni-forms")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-forms/uni-forms.vue */ 410))
     },
     uniFormsItem: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item.vue */ 402))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item.vue */ 423))
     },
     uniEasyinput: function () {
-      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput */ "node-modules/@dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput.vue */ 409))
+      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput */ "node-modules/@dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput.vue */ 430))
     },
     uniDataCheckbox: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-data-checkbox/uni-data-checkbox */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-data-checkbox/uni-data-checkbox")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-data-checkbox/uni-data-checkbox.vue */ 416))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-data-checkbox/uni-data-checkbox */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-data-checkbox/uni-data-checkbox")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-data-checkbox/uni-data-checkbox.vue */ 437))
     },
     uniDatetimePicker: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-datetime-picker/uni-datetime-picker */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-datetime-picker/uni-datetime-picker")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-datetime-picker/uni-datetime-picker.vue */ 428))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-datetime-picker/uni-datetime-picker */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-datetime-picker/uni-datetime-picker")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-datetime-picker/uni-datetime-picker.vue */ 449))
     },
     uModal: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-modal/u-modal */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-modal/u-modal")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-modal/u-modal.vue */ 321))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-modal/u-modal */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-modal/u-modal")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-modal/u-modal.vue */ 342))
     },
   }
 } catch (e) {

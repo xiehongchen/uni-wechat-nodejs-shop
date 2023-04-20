@@ -101,19 +101,19 @@ var components
 try {
   components = {
     uniSection: function () {
-      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-section/uni-section */ "node-modules/@dcloudio/uni-ui/lib/uni-section/uni-section").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-section/uni-section.vue */ 477))
+      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-section/uni-section */ "node-modules/@dcloudio/uni-ui/lib/uni-section/uni-section").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-section/uni-section.vue */ 498))
     },
     uniForms: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-forms/uni-forms */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-forms/uni-forms")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-forms/uni-forms.vue */ 389))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-forms/uni-forms */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-forms/uni-forms")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-forms/uni-forms.vue */ 410))
     },
     uniFormsItem: function () {
-      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item.vue */ 402))
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-forms-item/uni-forms-item.vue */ 423))
     },
     uniEasyinput: function () {
-      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput */ "node-modules/@dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput.vue */ 409))
+      return __webpack_require__.e(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput */ "node-modules/@dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput").then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-easyinput/uni-easyinput.vue */ 430))
     },
     uSwitch: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-switch/u-switch */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-switch/u-switch")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-switch/u-switch.vue */ 484))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-switch/u-switch */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-switch/u-switch")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-switch/u-switch.vue */ 505))
     },
   }
 } catch (e) {

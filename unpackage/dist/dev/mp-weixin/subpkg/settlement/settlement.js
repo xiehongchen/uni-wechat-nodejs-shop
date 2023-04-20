@@ -101,16 +101,19 @@ var components
 try {
   components = {
     myAddress: function () {
-      return __webpack_require__.e(/*! import() | components/my-address/my-address */ "components/my-address/my-address").then(__webpack_require__.bind(null, /*! @/components/my-address/my-address.vue */ 463))
+      return __webpack_require__.e(/*! import() | components/my-address/my-address */ "components/my-address/my-address").then(__webpack_require__.bind(null, /*! @/components/my-address/my-address.vue */ 484))
     },
     myGoodsSettle: function () {
-      return __webpack_require__.e(/*! import() | components/my-goods-settle/my-goods-settle */ "components/my-goods-settle/my-goods-settle").then(__webpack_require__.bind(null, /*! @/components/my-goods-settle/my-goods-settle.vue */ 470))
+      return __webpack_require__.e(/*! import() | components/my-goods-settle/my-goods-settle */ "components/my-goods-settle/my-goods-settle").then(__webpack_require__.bind(null, /*! @/components/my-goods-settle/my-goods-settle.vue */ 491))
+    },
+    uniIcons: function () {
+      return Promise.all(/*! import() | node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons */[__webpack_require__.e("common/vendor"), __webpack_require__.e("node-modules/@dcloudio/uni-ui/lib/uni-icons/uni-icons")]).then(__webpack_require__.bind(null, /*! @dcloudio/uni-ui/lib/uni-icons/uni-icons.vue */ 310))
     },
     uIcon: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-icon/u-icon */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-icon/u-icon")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-icon/u-icon.vue */ 337))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-icon/u-icon */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-icon/u-icon")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-icon/u-icon.vue */ 358))
     },
     uModal: function () {
-      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-modal/u-modal */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-modal/u-modal")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-modal/u-modal.vue */ 321))
+      return Promise.all(/*! import() | uni_modules/uview-ui/components/u-modal/u-modal */[__webpack_require__.e("common/vendor"), __webpack_require__.e("uni_modules/uview-ui/components/u-modal/u-modal")]).then(__webpack_require__.bind(null, /*! @/uni_modules/uview-ui/components/u-modal/u-modal.vue */ 342))
     },
   }
 } catch (e) {
@@ -186,10 +189,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 var _default = {
   data: function data() {
     return {
+      // 是否能够使用优惠劵
+      isUseCoupon: false,
       // 付款信息
       showPay: false,
       // 商品信息
       data: [],
+      // 优惠券
+      coupon: [],
       // 支付状态
       payStatus: '',
       // 订单id
@@ -211,18 +218,49 @@ var _default = {
       isOrder: false
     };
   },
-  computed: _objectSpread({}, (0, _vuex.mapGetters)('cart', ['checkedCount', 'checkedGoodsAmount'])),
+  computed: _objectSpread(_objectSpread({}, (0, _vuex.mapGetters)('cart', ['checkedCount', 'checkedGoodsAmount'])), {}, {
+    goodsAndCoupon: function goodsAndCoupon() {
+      // 判断是否使用优惠劵
+      if (this.coupon.couponId) {
+        // 判断是否满足使用条件
+        if (this.checkedGoodsAmount > this.coupon.consumeThreshold) {
+          // 折扣价格
+          if (this.coupon.couponType == 'DISCOUNT') {
+            var num = this.coupon.discount / 10;
+            return (this.checkedGoodsAmount * num).toFixed(2);
+          } else {
+            return this.checkedGoodsAmount - this.coupon.price;
+          }
+        }
+      } else {
+        return this.checkedGoodsAmount;
+      }
+    },
+    price: function price() {
+      if (this.checkedGoodsAmount > this.coupon.consumeThreshold) {
+        // 满足使用条件
+        this.isUseCoupon = true;
+        if (this.coupon.couponType == 'DISCOUNT') {
+          var num = 1 - this.coupon.discount / 10;
+          return (this.checkedGoodsAmount * num).toFixed(2);
+        } else {
+          return this.coupon.price;
+        }
+      }
+    }
+  }),
   onLoad: function onLoad(options) {
     // console.log("onLoad-----------");
     // 获取商品 Id
-    console.log(options);
+    // console.log(options);
     if (options.isOrder) {
       this.isOrder = options.isOrder;
       this.order_id = options.order_id;
-      console.log(this.isOrder);
-      console.log(this.order_id);
+      // console.log(this.isOrder);
+      // console.log(this.order_id);
     }
-    this.data = JSON.parse(options.data);
+
+    this.data = JSON.parse(options.goods);
     this.setAddress();
     // this.address = JSON.parse(uni.getStorageSync('address'));
     // this.data = JSON.parse(uni.getStorageSync('cart'))
@@ -231,10 +269,14 @@ var _default = {
     // console.log(this.data);
   },
   onShow: function onShow() {
+    // console.log(this.checkedGoodsAmount);
     this.getAddress();
     // this.address = JSON.parse(uni.getStorageSync('address'));
     // console.log("onShow---------");
     // console.log(this.address);
+    // this.coupon = JSON.parse(currPage.options);
+    console.log("优惠券信息");
+    console.log(this.coupon);
   },
   mounted: function mounted() {
     // console.log("mouted---------");
@@ -264,6 +306,9 @@ var _default = {
       }
       console.log(this.data);
     },
+    setCoupon: function setCoupon(newVal) {
+      this.coupon = newVal;
+    },
     // 选择支付方式
     pay: function pay(event) {
       // console.log(event);
@@ -292,9 +337,15 @@ var _default = {
         // console.log(addressId);
         // console.log(payment);
         // console.log(goodsList);
-
+        var couponid;
+        var lastPrice;
+        if (this.coupon) {
+          couponid = this.coupon.id || null;
+          lastPrice = this.goodsAndCoupon;
+        }
+        console.log(couponid, lastPrice);
         // 生成订单
-        (0, _order.createOrder)(addressId, payment, this.goodsList).then(function (res) {
+        (0, _order.createOrder)(addressId, payment, this.goodsList, couponid, lastPrice).then(function (res) {
           console.log(res);
           _this.order_id = res.data.order_id;
           console.log(_this.order_id);
@@ -369,6 +420,10 @@ var _default = {
     this.showPay = false;
     this.payStatus = 'BUYER_PAYMENT_SUCCESS';
     this.pay();
+  }), (0, _defineProperty2.default)(_objectSpread2, "useCoupon", function useCoupon() {
+    uni.navigateTo({
+      url: '/subpkg/coupon-user/coupon-user'
+    });
   }), _objectSpread2))
 };
 exports.default = _default;

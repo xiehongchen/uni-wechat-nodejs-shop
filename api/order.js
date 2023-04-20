@@ -2,7 +2,7 @@ import $http from '@/config/request.js'
 
 
 // 提交订单	地址id、支付金额、商品列表
-export function createOrder(addressId, payment, goodsList) {
+export function createOrder(addressId, payment, goodsList,couponid,lastPrice) {
 	return $http.request({
 		url: "/orders/create",
 		method: 'post',
@@ -12,7 +12,9 @@ export function createOrder(addressId, payment, goodsList) {
 		data: {
 			addressId: addressId,
 			payment: payment,
-			goodsList: goodsList
+			goodsList: goodsList,
+			couponid:couponid,
+			lastPrice:lastPrice
 		}
 	})
 }

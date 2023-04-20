@@ -1,0 +1,1 @@
+<view><my-coupon-list vue-id="4fe02ee6-1" coupon="{{couponList}}" data-event-opts="{{[['^useCoupon',[['useCoupon']]],['^cancelUseCoupon',[['cancelUseCoupon']]]]}}" bind:useCoupon="__e" bind:cancelUseCoupon="__e" bind:__l="__l"></my-coupon-list><block wx:if="{{$root.g0==0}}"><u-empty vue-id="4fe02ee6-2" text="暂无优惠劵" mode="coupon" bind:__l="__l"></u-empty></block></view>

@@ -20,6 +20,10 @@
 				<image src="/static/mine/myfavorite.png" mode=""></image>
 				<view>我的关注</view>
 			</view>
+			<view class="interact-item" @click="navigateTo('/subpkg/coupon/coupon')">
+				<image src="/static/mine/mycoupon.png" mode=""></image>
+				<view>优惠券</view>
+			</view>
 			<view class="interact-item">
 				<image src="/static/mine/feedback.png" mode=""></image>
 				<view>意见反馈</view>
